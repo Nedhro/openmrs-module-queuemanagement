@@ -1,4 +1,4 @@
-Queue Mangement Module in BAHMNI
+Queue Management Module in BAHMNI
 ==========================
 
 Description
