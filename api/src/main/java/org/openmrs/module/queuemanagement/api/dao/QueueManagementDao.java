@@ -5,15 +5,14 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.queuemanagement.PatientQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository("queuemanagement.QueueManagementDao")
 public class QueueManagementDao {
@@ -26,13 +25,14 @@ public class QueueManagementDao {
 	private DbSession getSession() {
 		return sessionFactory.getCurrentSession();
 	}
-
+	
 	public PatientQueue getPatientByIdentifier(String identifier) {
 		return (PatientQueue) getSession().createCriteria(PatientQueue.class).add(Restrictions.eq("identifier", identifier))
 		        .add(Restrictions.eq("status", true)).uniqueResult();
 	}
 	
-	public PatientQueue save(PatientQueue queue) throws Exception {
+	@Transactional
+	public PatientQueue save(PatientQueue queue) {
 		PatientQueue checkIdentifier = this.getPatientByIdentifier(queue.getIdentifier());
 		System.out.println("Data by Identifier: " + checkIdentifier);
 		//Queue Count
@@ -55,14 +55,11 @@ public class QueueManagementDao {
 		return queue;
 	}
 	
+	@Transactional
 	public PatientQueue updateStatus(PatientQueue queue) {
 		System.out.println(queue);
-		queue.setId(queue.getId());
-		queue.setToken(queue.getToken());
-		queue.setIdentifier(queue.getIdentifier());
-		queue.setVisitroom(queue.getVisitroom());
 		queue.setStatus(false);
-		getSession().update(queue);
+		getSession().saveOrUpdate(queue);
 		System.out.println("Patient Queue Status Updated: " + queue);
 		return queue;
 	}
@@ -91,27 +88,23 @@ public class QueueManagementDao {
 	
 	public List<PatientQueue> countIdentifier(String visitroom) {
 		SQLQuery criteria = getSession().createSQLQuery(
-		    "select distinct identifier from patient_queue_test where visitroom =\'" + visitroom + "\'");
+		    "select distinct identifier from queue_v1 where visitroom =\'" + visitroom + "\'");
 		return criteria.list();
-	}
-	
-	public List<Map<String, Object>> getObsData() {
-		SQLQuery q = getSession().createSQLQuery("select * from complex_obs_view");
-		return q.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 	}
 	
 	public List<Object> getAllVisitroom() {
-		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from patient_queue_test");
+		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from queue_v1");
 		return criteria.list();
 	}
 	
+	@Transactional
 	public PatientQueue update(String identifier) {
 		System.out.println(identifier);
 		PatientQueue patientQueue = this.getPatientByIdentifier(identifier);
 		if (patientQueue != null)
 			this.updateStatus(patientQueue);
-		System.out.println("Queue Updated: " + patientQueue);
 		
+		System.out.println("Queue Updated: " + patientQueue);
 		return patientQueue;
 	}
 	
@@ -119,6 +112,7 @@ public class QueueManagementDao {
 		return (PatientQueue) getSession().createCriteria(PatientQueue.class).add(Restrictions.eq("id", id)).uniqueResult();
 	}
 	
+	@Transactional
 	public PatientQueue update(PatientQueue queue) {
 		getSession().saveOrUpdate(queue);
 		return queue;

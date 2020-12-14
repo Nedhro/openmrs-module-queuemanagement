@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity(name = "queuemanagement.PatientQueue")
-@Table(name = "queue2")
+@Table(name = "queue_v1")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PatientQueue implements Serializable {
 	
@@ -20,15 +20,15 @@ public class PatientQueue implements Serializable {
 	@Basic(fetch = FetchType.LAZY)
 	@Column(name = "token")
 	private Integer token;
-
+	
 	@Basic(optional = false, fetch = FetchType.LAZY)
 	@Column(name = "identifier")
 	private String identifier;
-
+	
 	@Basic(optional = false, fetch = FetchType.LAZY)
 	@Column(name = "visitroom")
 	private String visitroom;
-
+	
 	@Basic(optional = false, fetch = FetchType.EAGER)
 	@Column(name = "status")
 	private Boolean status;

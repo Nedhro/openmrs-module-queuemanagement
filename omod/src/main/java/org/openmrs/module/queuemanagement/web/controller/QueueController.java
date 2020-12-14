@@ -9,9 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 @Controller
@@ -23,13 +24,18 @@ public class QueueController {
 	private QueueManagementService queueManagementService;
 	
 	@RequestMapping("/module/queuemanagement/dashboard")
-	public String showDashboard(ModelAndView model) throws IOException {
+	public String showDashboard() {
 		return "/module/queuemanagement/dashboard";
 	}
 	
-	@RequestMapping(value = "/module/queuemanagement/_allqueues", method = RequestMethod.GET)
+	@RequestMapping("/module/queuemanagement/roomWiseQueue")
+	public String showQueueRoomWise() {
+		return "/module/queuemanagement/roomQueue";
+	}
+	
+	@RequestMapping(value = "/module/queuemanagement/allqueues", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PatientQueue> showAllQueues() throws Exception {
+	public List<PatientQueue> showAllQueues() {
 		List<PatientQueue> queues = queueManagementService.getAllQueueId();
 		System.out.println(" qqq  :::::::" + queues);
 		if (queues.isEmpty()) {
@@ -42,46 +48,51 @@ public class QueueController {
 	}
 	
 	@RequestMapping(value = "/module/queuemanagement/generate", method = RequestMethod.POST)
-	public ResponseEntity<?> generate(@RequestBody PatientQueue queue) {
+	@ResponseBody
+	public ResponseEntity<Object> saveQueue(@Valid @RequestBody PatientQueue queue) throws IOException {
 		try {
-			if (queue != null) {
-				PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifier(queue.getVisitroom(),
-				    queue.getIdentifier());
-				if (patientQueue == null) {
-					this.queueManagementService.save(queue);
-					log.info("Queue ::" + queue);
-					System.out.println("Queue :: " + queue);
-					return new ResponseEntity<PatientQueue>(queue, HttpStatus.CREATED);
-				} else {
-					queue.setId(patientQueue.getId());
-					queue.setToken(patientQueue.getToken());
-					queue.setIdentifier(queue.getIdentifier());
-					queue.setVisitroom(queue.getVisitroom());
-					queue.setStatus(queue.getStatus());
-					System.out.println(queue);
-					this.queueManagementService.update(queue);
-					return new ResponseEntity<HttpStatus>(HttpStatus.OK);
-				}
+			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifier(queue.getVisitroom(),
+			    queue.getIdentifier());
+			if (patientQueue == null) {
+				this.queueManagementService.save(queue);
+				log.info("Queue ::" + queue);
+				System.out.println("Queue :: " + queue);
+				return new ResponseEntity<Object>(queue, HttpStatus.CREATED);
 			} else {
-				return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+				queue.setId(patientQueue.getId());
+				queue.setToken(patientQueue.getToken());
+				System.out.println(queue);
+				this.queueManagementService.update(queue);
+				return new ResponseEntity<Object>(queue, HttpStatus.OK);
 			}
 		}
 		catch (Exception e) {
-			return new ResponseEntity<PatientQueue>(queue, HttpStatus.IM_USED);
+			log.error("Runtime error while trying to create new queue", e.getCause());
+			return new ResponseEntity<Object>(e.getCause(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@RequestMapping(value = "/module/queuemanagement/updateQueue", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateQueue(@RequestParam("identifier") String identifier) {
-		PatientQueue queue1 = this.queueManagementService.update(identifier);
-		System.out.println("Queue :: " + queue1);
-		return new ResponseEntity<PatientQueue>(queue1, HttpStatus.OK);
+	@RequestMapping(value = "/module/queuemanagement/updateQueue", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Object> updateQueue(@RequestParam("identifier") String identifier) throws ParseException {
+		try {
+			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifier(identifier);
+			if (patientQueue == null) {
+				throw new RuntimeException("Queue does not exist");
+			}
+			patientQueue.setStatus(false);
+			this.queueManagementService.update(patientQueue);
+			return new ResponseEntity<Object>(patientQueue, HttpStatus.OK);
+		}
+		catch (RuntimeException e) {
+			log.error("Runtime error while trying to undo appointment status", e);
+			return new ResponseEntity<Object>(e.getCause(), HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@RequestMapping(value = "/module/queuemanagement/queueByVisitroom", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom", required = false) String visitroom)
-	        throws Exception {
+	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom", required = false) String visitroom) {
 		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(visitroom);
 		if (obs == null) {
 			log.info("No Queue data found...");
