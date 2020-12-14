@@ -1,9 +1,9 @@
-${moduleName}
+Queue Management Module in BAHMNI
 ==========================
 
 Description
 -----------
-This is a very basic module which can be used as a starting point in creating a new module.
+This is a very basic module on Queue Mangement of BAHMNI System which can be used from registration OPD visit page to Doctor's Consultation.
 
 Building from Source
 --------------------
