@@ -1,12 +1,3 @@
-/**
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v. 2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
- * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- * <p>
- * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
- * graphic logo is a trademark of OpenMRS Inc.
- */
 package org.openmrs.module.queuemanagement.api.dao;
 
 import org.apache.commons.logging.Log;
@@ -35,15 +26,7 @@ public class QueueManagementDao {
 	private DbSession getSession() {
 		return sessionFactory.getCurrentSession();
 	}
-	
-	/*public Item getItemByUuid(String uuid) {
-	    return (Item) getSession().createCriteria(Item.class).add(Restrictions.eq("uuid", uuid)).uniqueResult();
-	}
 
-	public Item saveItem(Item item) {
-	    getSession().saveOrUpdate(item);
-	    return item;
-	}*/
 	public PatientQueue getPatientByIdentifier(String identifier) {
 		return (PatientQueue) getSession().createCriteria(PatientQueue.class).add(Restrictions.eq("identifier", identifier))
 		        .add(Restrictions.eq("status", true)).uniqueResult();
@@ -84,24 +67,6 @@ public class QueueManagementDao {
 		return queue;
 	}
 	
-	/*public boolean existByIdentifier(String identifier, String visitroom) {
-		SQLQuery criteria = getSession().createSQLQuery(
-		    "select identifier, token from queue2 q where q.visitroom=\'" + visitroom + "\' and q.identifier=\'"
-		            + identifier + "\'");
-		System.out.println("Criteria: " + criteria.list());
-		if (criteria.list().size() > 0) {
-			return true;
-		}
-		return false;
-	}*/
-	
-	/*public PatientQueue existsIdentifier(String identifier) {
-		SQLQuery criteria = getSession().createSQLQuery("select * from queue2 q where q.identifier=\'" + identifier + "\'");
-		PatientQueue listQueues = (PatientQueue) criteria.list();
-		System.out.println("Criteria: " + criteria.list());
-		return listQueues;
-	}*/
-	
 	public List<PatientQueue> getPatientQueueByVisitroom(String visitroom) {
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("visitroom", visitroom));
@@ -116,14 +81,6 @@ public class QueueManagementDao {
 		return (PatientQueue) criteria.uniqueResult();
 	}
 	
-	/*public Integer getMaxTokenByVisitroom(String visitroom) {
-		Criteria criteria = getSession().createCriteria(PatientQueue.class).add(Restrictions.eq("visitroom", visitroom))
-		        .setProjection(Projections.max("token"));
-		Integer maxToken = (Integer) criteria.uniqueResult();
-		System.out.println(maxToken);
-		return maxToken;
-	}*/
-	
 	public List<PatientQueue> getAllQueueId() {
 		List<PatientQueue> queueList = getSession().createQuery("from PatientQueue").list();
 		for (PatientQueue queue : queueList) {
@@ -134,7 +91,7 @@ public class QueueManagementDao {
 	
 	public List<PatientQueue> countIdentifier(String visitroom) {
 		SQLQuery criteria = getSession().createSQLQuery(
-		    "select distinct identifier from queue2 where visitroom =\'" + visitroom + "\'");
+		    "select distinct identifier from patient_queue_test where visitroom =\'" + visitroom + "\'");
 		return criteria.list();
 	}
 	
@@ -144,20 +101,17 @@ public class QueueManagementDao {
 	}
 	
 	public List<Object> getAllVisitroom() {
-		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from queue2");
+		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from patient_queue_test");
 		return criteria.list();
 	}
 	
 	public PatientQueue update(String identifier) {
 		System.out.println(identifier);
 		PatientQueue patientQueue = this.getPatientByIdentifier(identifier);
-		System.out.println("patient queue :::::: " + patientQueue);
-		if (patientQueue != null) {
-			//queue.setId(id);
-			patientQueue.setStatus(false);
-			getSession().update(patientQueue);
-			System.out.println("Queue Updated: " + patientQueue);
-		}
+		if (patientQueue != null)
+			this.updateStatus(patientQueue);
+		System.out.println("Queue Updated: " + patientQueue);
+		
 		return patientQueue;
 	}
 	
@@ -165,7 +119,8 @@ public class QueueManagementDao {
 		return (PatientQueue) getSession().createCriteria(PatientQueue.class).add(Restrictions.eq("id", id)).uniqueResult();
 	}
 	
-	public void update(PatientQueue queue) {
-		getSession().update(queue);
+	public PatientQueue update(PatientQueue queue) {
+		getSession().saveOrUpdate(queue);
+		return queue;
 	}
 }

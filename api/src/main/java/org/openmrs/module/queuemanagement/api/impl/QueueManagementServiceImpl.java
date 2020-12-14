@@ -19,73 +19,68 @@ import java.util.List;
 import java.util.Map;
 
 public class QueueManagementServiceImpl extends BaseOpenmrsService implements QueueManagementService {
-	
-	QueueManagementDao dao;
-	
-	UserService userService;
-	
-	/**
-	 * Injected in moduleApplicationContext.xml
-	 */
-	public void setDao(QueueManagementDao dao) {
-		this.dao = dao;
-	}
-	
-	/**
-	 * Injected in moduleApplicationContext.xml
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-	
-	@Override
-	public PatientQueue save(PatientQueue queue) throws Exception {
-		return dao.save(queue);
-	}
-	
-	@Override
-	public List<PatientQueue> getPatientQueueByVisitroom(String visitroom) throws Exception {
-		return dao.getPatientQueueByVisitroom(visitroom);
-	}
-	
-	@Override
-	public PatientQueue getPatientByIdentifier(String identifier) {
-		return dao.getPatientByIdentifier(identifier);
-	}
-	
-	@Override
-	public List<PatientQueue> getAllQueueId() throws Exception {
-		return dao.getAllQueueId();
-	}
-	
-	@Override
-	public List<Map<String, Object>> getObsData() {
-		return dao.getObsData();
-	}
-	
-	@Override
-	public List<Object> getAllVisitroom() {
-		return dao.getAllVisitroom();
-	}
-	
-	@Override
-	public PatientQueue update(String identifier) {
-		return dao.update(identifier);
-	}
-	
-	@Override
-	public PatientQueue getPatientByIdentifier(String visitroom, String identifier) {
-		return dao.getTokenByIdentifier(visitroom, identifier);
-	}
-	
-	@Override
-	public void update(PatientQueue queue) {
-		dao.update(queue);
-	}
-	
-	/*@Override
-	public Item getItemByUuid(String uuid) throws APIException {
-		return dao.getItemByUuid(uuid);
-	}*/
-	
+
+    QueueManagementDao dao;
+
+    UserService userService;
+
+    /**
+     * Injected in moduleApplicationContext.xml
+     */
+    public void setDao(QueueManagementDao dao) {
+        this.dao = dao;
+    }
+
+    /**
+     * Injected in moduleApplicationContext.xml
+     */
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Override
+    public PatientQueue save(PatientQueue queue) throws Exception {
+        return dao.save(queue);
+    }
+
+    @Override
+    public List<PatientQueue> getPatientQueueByVisitroom(String visitroom) throws Exception {
+        return dao.getPatientQueueByVisitroom(visitroom);
+    }
+
+    @Override
+    public PatientQueue getPatientByIdentifier(String identifier) {
+        return dao.getPatientByIdentifier(identifier);
+    }
+
+    @Override
+    public List<PatientQueue> getAllQueueId() throws Exception {
+        return dao.getAllQueueId();
+    }
+
+    @Override
+    public List<Map<String, Object>> getObsData() {
+        return dao.getObsData();
+    }
+
+    @Override
+    public List<Object> getAllVisitroom() {
+        return dao.getAllVisitroom();
+    }
+
+    @Override
+    public PatientQueue update(String identifier) {
+        return dao.update(identifier);
+    }
+
+    @Override
+    public PatientQueue getPatientByIdentifier(String visitroom, String identifier) {
+        return dao.getTokenByIdentifier(visitroom, identifier);
+    }
+
+    @Override
+    public void update(PatientQueue queue) {
+        dao.update(queue);
+    }
+
 }

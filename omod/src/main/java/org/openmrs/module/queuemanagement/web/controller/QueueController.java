@@ -74,7 +74,7 @@ public class QueueController {
 	@RequestMapping(value = "/module/queuemanagement/updateQueue", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateQueue(@RequestParam("identifier") String identifier) {
 		PatientQueue queue1 = this.queueManagementService.update(identifier);
-		System.out.println("q1   " + queue1);
+		System.out.println("Queue :: " + queue1);
 		return new ResponseEntity<PatientQueue>(queue1, HttpStatus.OK);
 	}
 	

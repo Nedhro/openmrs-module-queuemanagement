@@ -8,13 +8,13 @@
     <changeSet id="queuemanagement-2020-5" author="nidhro">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="queue2"/>
+                <tableExists tableName="patient_queue_test"/>
             </not>
         </preConditions>
         <comment>
-            Creating the queue2 table
+            Creating the patient_queue_test table
         </comment>
-        <createTable tableName="queue2">
+        <createTable tableName="patient_queue_test">
             <column name="queueid" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

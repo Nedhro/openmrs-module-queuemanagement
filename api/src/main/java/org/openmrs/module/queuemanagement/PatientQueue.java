@@ -17,18 +17,19 @@ public class PatientQueue implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
-	@Basic(optional = false, fetch = FetchType.LAZY)
+	@Basic(fetch = FetchType.LAZY)
 	@Column(name = "token")
 	private Integer token;
-	
-	@Basic
+
+	@Basic(optional = false, fetch = FetchType.LAZY)
 	@Column(name = "identifier")
 	private String identifier;
-	
-	@Basic
+
+	@Basic(optional = false, fetch = FetchType.LAZY)
 	@Column(name = "visitroom")
 	private String visitroom;
-	
+
+	@Basic(optional = false, fetch = FetchType.EAGER)
 	@Column(name = "status")
 	private Boolean status;
 	
