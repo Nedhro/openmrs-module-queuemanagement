@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.api.db.DAOException;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.queuemanagement.PatientQueue;
@@ -98,23 +99,12 @@ public class QueueManagementDao {
 	}
 	
 	@Transactional
-	public PatientQueue update(String identifier) {
-		System.out.println(identifier);
-		PatientQueue patientQueue = this.getPatientByIdentifier(identifier);
-		if (patientQueue != null)
-			this.updateStatus(patientQueue);
-		
-		System.out.println("Queue Updated: " + patientQueue);
-		return patientQueue;
-	}
-	
-	private PatientQueue getPatientQueueById(Integer id) {
-		return (PatientQueue) getSession().createCriteria(PatientQueue.class).add(Restrictions.eq("id", id)).uniqueResult();
-	}
-	
-	@Transactional
 	public PatientQueue update(PatientQueue queue) {
 		getSession().saveOrUpdate(queue);
 		return queue;
+	}
+
+	public void truncate() throws DAOException {
+		getSession().createSQLQuery("truncate table queue_v1").executeUpdate();
 	}
 }

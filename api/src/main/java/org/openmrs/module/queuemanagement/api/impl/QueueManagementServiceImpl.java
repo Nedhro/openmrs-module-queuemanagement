@@ -10,6 +10,7 @@
 package org.openmrs.module.queuemanagement.api.impl;
 
 import org.openmrs.api.UserService;
+import org.openmrs.api.db.DAOException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.queuemanagement.PatientQueue;
 import org.openmrs.module.queuemanagement.api.QueueManagementService;
@@ -64,12 +65,6 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 		return dao.getAllVisitroom();
 	}
 	
-	@Transactional
-	@Override
-	public PatientQueue update(String identifier) {
-		return dao.update(identifier);
-	}
-	
 	@Override
 	public PatientQueue getPatientByIdentifier(String visitroom, String identifier) {
 		return dao.getTokenByIdentifier(visitroom, identifier);
@@ -80,5 +75,10 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	public void update(PatientQueue queue) {
 		dao.update(queue);
 	}
-	
+
+	@Override
+	public void truncate() throws DAOException {
+		dao.truncate();
+	}
+
 }
