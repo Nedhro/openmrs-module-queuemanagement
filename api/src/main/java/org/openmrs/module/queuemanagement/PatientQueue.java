@@ -1,13 +1,11 @@
 package org.openmrs.module.queuemanagement;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity(name = "queuemanagement.PatientQueue")
-@Table(name = "queue_v1")
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Table(name = "queue_v4")
 public class PatientQueue implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -30,16 +28,26 @@ public class PatientQueue implements Serializable {
 	private String visitroom;
 	
 	@Basic(optional = false, fetch = FetchType.EAGER)
+	@Column(name = "room_name")
+	private String roomName;
+	
+	@Basic(optional = false, fetch = FetchType.EAGER)
+	@Column(name = "date_created")
+	private Date dateCreated;
+	
+	@Basic(optional = false, fetch = FetchType.EAGER)
 	@Column(name = "status")
 	private Boolean status;
 	
 	public PatientQueue() {
 	}
 	
-	public PatientQueue(Integer token, String identifier, String visitroom) {
-		this.token = token;
+	public PatientQueue(String identifier, String visitroom, String roomName, Date dateCreated, Boolean status) {
 		this.identifier = identifier;
 		this.visitroom = visitroom;
+		this.roomName = roomName;
+		this.dateCreated = dateCreated;
+		this.status = status;
 	}
 	
 	public Integer getId() {
@@ -74,6 +82,22 @@ public class PatientQueue implements Serializable {
 		this.visitroom = visitroom;
 	}
 	
+	public String getRoomName() {
+		return roomName;
+	}
+	
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
+	
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+	
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	
 	public Boolean getStatus() {
 		return status;
 	}
@@ -85,7 +109,7 @@ public class PatientQueue implements Serializable {
 	@Override
 	public String toString() {
 		return "PatientQueue{" + "id=" + id + ", token=" + token + ", identifier='" + identifier + '\'' + ", visitroom='"
-		        + visitroom + '\'' + ", status=" + status + '}';
+		        + visitroom + '\'' + ", roomName='" + roomName + '\'' + ", dateCreated=" + dateCreated + ", status="
+		        + status + '}';
 	}
-	
 }

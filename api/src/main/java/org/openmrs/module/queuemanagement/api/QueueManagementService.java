@@ -53,6 +53,6 @@ public interface QueueManagementService extends OpenmrsService {
 	PatientQueue getPatientByIdentifier(String visitroom, String identifier) throws APIException;
 	
 	void update(PatientQueue queue) throws APIException;
-
+	
 	void truncate() throws DAOException;
 }

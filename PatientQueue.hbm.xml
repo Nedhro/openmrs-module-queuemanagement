@@ -2,13 +2,15 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="org.openmrs.module.queuemanagement">
-    <class name="PatientQueue" table="queue_v1" lazy="false">
+    <class name="PatientQueue" table="queue_v4" lazy="false">
         <id name="id" column="queueid">
             <generator class="native"/>
         </id>
         <property name="token" type="java.lang.Integer" column="token" length="10"/>
         <property name="identifier" type="java.lang.String" column="identifier" length="255"/>
         <property name="visitroom" type="java.lang.String" column="visitroom" length="255"/>
+        <property name="roomName" type="java.lang.String" column="room_name" length="255"/>
+        <property name="dateCreated" type="java.util.Date" column="date_reated" length="255"/>
         <property name="status" type="java.lang.Boolean" column="status" length="10"/>
     </class>
 </hibernate-mapping>

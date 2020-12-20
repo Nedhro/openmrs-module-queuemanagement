@@ -89,12 +89,12 @@ public class QueueManagementDao {
 	
 	public List<PatientQueue> countIdentifier(String visitroom) {
 		SQLQuery criteria = getSession().createSQLQuery(
-		    "select distinct identifier from queue_v1 where visitroom =\'" + visitroom + "\'");
+		    "select distinct identifier from queue_v4 where visitroom =\'" + visitroom + "\'");
 		return criteria.list();
 	}
 	
 	public List<Object> getAllVisitroom() {
-		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from queue_v1");
+		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from queue_v4");
 		return criteria.list();
 	}
 	
@@ -103,8 +103,8 @@ public class QueueManagementDao {
 		getSession().saveOrUpdate(queue);
 		return queue;
 	}
-
+	
 	public void truncate() throws DAOException {
-		getSession().createSQLQuery("truncate table queue_v1").executeUpdate();
+		getSession().createSQLQuery("truncate table queue_v4").executeUpdate();
 	}
 }

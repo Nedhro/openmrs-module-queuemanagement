@@ -75,10 +75,10 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	public void update(PatientQueue queue) {
 		dao.update(queue);
 	}
-
+	
 	@Override
 	public void truncate() throws DAOException {
 		dao.truncate();
 	}
-
+	
 }

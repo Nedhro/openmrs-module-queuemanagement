@@ -5,24 +5,26 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
-    <changeSet id="queuemanagement-2020-v1" author="nidhro">
+    <changeSet id="queuemanagement-2020-v4" author="nidhro">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="queue_v1"/>
+                <tableExists tableName="queue_v4"/>
             </not>
         </preConditions>
         <comment>
-            Creating the queue_v1 table
+            Creating the queue_v4 table
         </comment>
-        <createTable tableName="queue_v1">
-            <column name="queueid" type="int" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="token" type="int"/>
-            <column name="identifier" type="varchar(255)"/>
-            <column name="visitroom" type="varchar(255)"/>
-            <column name="status" type="boolean"/>
-        </createTable>
+        <sql>
+            CREATE TABLE IF NOT EXISTS queue_v4 (
+            queueid INT NOT NULL AUTO_INCREMENT ,
+            token VARCHAR(50) NOT NULL,
+            identifier VARCHAR(50) NOT NULL ,
+            visitroom VARCHAR(50) NOT NULL ,
+            room_name VARCHAR(50) NULL,
+            date_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            status TINYINT NULL,
+            PRIMARY KEY (queueid))
+        </sql>
     </changeSet>
 
 </databaseChangeLog>
