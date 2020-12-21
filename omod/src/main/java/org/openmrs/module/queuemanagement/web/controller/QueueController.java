@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class QueueController {
 	
 	@RequestMapping(value = "/module/queuemanagement/generate", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Object> saveQueue(@Valid @RequestBody PatientQueue queue) throws IOException {
+	public ResponseEntity<Object> saveQueue(@Valid @RequestBody PatientQueue queue) {
 		try {
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifier(queue.getVisitroom(),
 			    queue.getIdentifier());
@@ -87,7 +86,7 @@ public class QueueController {
 	
 	@RequestMapping(value = "/module/queuemanagement/queueByVisitroom", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom", required = false) String visitroom) {
+	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom", required = true) String visitroom) {
 		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(visitroom);
 		if (obs == null) {
 			log.info("No Queue data found...");

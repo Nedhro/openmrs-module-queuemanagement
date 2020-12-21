@@ -1,5 +1,7 @@
 package org.openmrs.module.queuemanagement;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -32,11 +34,13 @@ public class PatientQueue implements Serializable {
 	private String roomName;
 	
 	@Basic(optional = false, fetch = FetchType.EAGER)
-	@Column(name = "date_created")
+	@Column(name = "date_created", updatable = true)
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private Date dateCreated;
 	
 	@Basic(optional = false, fetch = FetchType.EAGER)
-	@Column(name = "status")
+	@Column(name = "status", updatable = true)
 	private Boolean status;
 	
 	public PatientQueue() {

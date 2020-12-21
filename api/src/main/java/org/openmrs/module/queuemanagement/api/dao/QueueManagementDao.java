@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Repository("queuemanagement.QueueManagementDao")
@@ -28,8 +30,9 @@ public class QueueManagementDao {
 	}
 	
 	public PatientQueue getPatientByIdentifier(String identifier) {
+		Date date = new Date();
 		return (PatientQueue) getSession().createCriteria(PatientQueue.class).add(Restrictions.eq("identifier", identifier))
-		        .add(Restrictions.eq("status", true)).uniqueResult();
+		        .add(Restrictions.eq("status", true)).add(Restrictions.eq("dateCreated", date)).uniqueResult();
 	}
 	
 	@Transactional
@@ -66,16 +69,21 @@ public class QueueManagementDao {
 	}
 	
 	public List<PatientQueue> getPatientQueueByVisitroom(String visitroom) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		System.out.println(dateFormat);
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("visitroom", visitroom));
 		criteria.add(Restrictions.eq("status", true));
+		criteria.add(Restrictions.eq("dateCreated", dateFormat));
 		return criteria.list();
 	}
 	
 	public PatientQueue getTokenByIdentifier(String visitroom, String identifier) {
+		Date date = new Date();
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("visitroom", visitroom));
 		criteria.add(Restrictions.eq("identifier", identifier));
+		criteria.add(Restrictions.eq("dateCreated", date));
 		return (PatientQueue) criteria.uniqueResult();
 	}
 	
@@ -88,8 +96,10 @@ public class QueueManagementDao {
 	}
 	
 	public List<PatientQueue> countIdentifier(String visitroom) {
+		Date date = new Date();
 		SQLQuery criteria = getSession().createSQLQuery(
-		    "select distinct identifier from queue_v4 where visitroom =\'" + visitroom + "\'");
+		    "select distinct identifier from queue_v4 where visitroom =\'" + visitroom + "\' and date_created =\'" + date
+		            + "\'");
 		return criteria.list();
 	}
 	

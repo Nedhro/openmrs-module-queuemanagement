@@ -21,7 +21,7 @@
             identifier VARCHAR(50) NOT NULL ,
             visitroom VARCHAR(50) NOT NULL ,
             room_name VARCHAR(50) NULL,
-            date_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            date_created DATE NOT NULL,
             status TINYINT NULL,
             PRIMARY KEY (queueid))
         </sql>

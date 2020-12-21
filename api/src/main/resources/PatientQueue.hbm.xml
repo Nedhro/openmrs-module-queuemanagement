@@ -10,7 +10,7 @@
         <property name="identifier" type="java.lang.String" column="identifier" length="255"/>
         <property name="visitroom" type="java.lang.String" column="visitroom" length="255"/>
         <property name="roomName" type="java.lang.String" column="room_name" length="255"/>
-        <property name="dateCreated" type="java.util.Date" column="date_reated" length="255"/>
+        <property name="dateCreated" type="java.util.Date" column="date_created" length="255"/>
         <property name="status" type="java.lang.Boolean" column="status" length="10"/>
     </class>
 </hibernate-mapping>
