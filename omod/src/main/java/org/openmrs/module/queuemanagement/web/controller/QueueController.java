@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -49,9 +51,10 @@ public class QueueController {
 	@RequestMapping(value = "/module/queuemanagement/generate", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Object> saveQueue(@Valid @RequestBody PatientQueue queue) {
+		System.out.println("Submitted Queue :: " + queue.getDateCreated() + " :: " + queue.getVisitroom());
 		try {
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifier(queue.getVisitroom(),
-			    queue.getIdentifier());
+			    queue.getDateCreated());
 			if (patientQueue == null) {
 				this.queueManagementService.save(queue);
 				log.info("Queue ::" + queue);
@@ -68,13 +71,13 @@ public class QueueController {
 	
 	@RequestMapping(value = "/module/queuemanagement/updateQueue", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Object> updateQueue(@RequestParam("identifier") String identifier) throws ParseException {
+	public ResponseEntity<Object> updateQueue(@Valid @RequestBody PatientQueue queue) throws ParseException {
 		try {
-			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifier(identifier);
+			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(
+			    queue.getIdentifier(), queue.getVisitroom(), queue.getDateCreated());
 			if (patientQueue == null) {
 				throw new RuntimeException("Queue does not exist");
 			}
-			patientQueue.setStatus(false);
 			this.queueManagementService.update(patientQueue);
 			return new ResponseEntity<Object>(patientQueue, HttpStatus.OK);
 		}
@@ -86,8 +89,9 @@ public class QueueController {
 	
 	@RequestMapping(value = "/module/queuemanagement/queueByVisitroom", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom", required = true) String visitroom) {
-		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(visitroom);
+	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom", required = true) String visitroom,
+	        @RequestParam(value = "dateCreated", required = true) String dateCreated) throws ParseException {
+		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(visitroom, dateCreated);
 		if (obs == null) {
 			log.info("No Queue data found...");
 		} else {
@@ -106,8 +110,16 @@ public class QueueController {
 	
 	@RequestMapping(value = "/module/queuemanagement/getToken", method = RequestMethod.GET)
 	@ResponseBody
-	public PatientQueue getPatientToken(@RequestParam(value = "identifier") String identifier) {
-		PatientQueue patient = queueManagementService.getPatientByIdentifier(identifier);
+	public PatientQueue getPatientToken(@RequestParam("identifier") String identifier,
+	        @RequestParam(value = "dateCreated") String dateCreated) {
+		PatientQueue patient = null;
+		try {
+			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateCreated);
+			patient = queueManagementService.getPatientByIdentifier(identifier, date);
+		}
+		catch (ParseException e) {
+			e.printStackTrace();
+		}
 		return patient;
 	}
 	

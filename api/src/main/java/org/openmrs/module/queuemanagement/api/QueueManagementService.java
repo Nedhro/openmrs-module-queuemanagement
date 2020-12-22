@@ -15,6 +15,8 @@ import org.openmrs.api.db.DAOException;
 import org.openmrs.module.queuemanagement.PatientQueue;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,10 +41,10 @@ public interface QueueManagementService extends OpenmrsService {
 	PatientQueue save(PatientQueue queue) throws APIException;
 	
 	@Transactional
-	List<PatientQueue> getPatientQueueByVisitroom(String visitroom) throws APIException;
+	List<PatientQueue> getPatientQueueByVisitroom(String visitroom, String dateCreated) throws ParseException;
 	
 	@Transactional
-	PatientQueue getPatientByIdentifier(String identifier) throws APIException;
+	PatientQueue getPatientByIdentifier(String identifier, Date dateCreated) throws APIException;
 	
 	@Transactional
 	List<PatientQueue> getAllQueueId() throws APIException;
@@ -50,9 +52,9 @@ public interface QueueManagementService extends OpenmrsService {
 	@Transactional
 	List<Object> getAllVisitroom() throws APIException;
 	
-	PatientQueue getPatientByIdentifier(String visitroom, String identifier) throws APIException;
-	
 	void update(PatientQueue queue) throws APIException;
 	
 	void truncate() throws DAOException;
+	
+	PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String visitroom, Date dateCreated);
 }

@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.queuemanagement.api.impl;
 
+import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -17,6 +18,8 @@ import org.openmrs.module.queuemanagement.api.QueueManagementService;
 import org.openmrs.module.queuemanagement.api.dao.QueueManagementDao;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 public class QueueManagementServiceImpl extends BaseOpenmrsService implements QueueManagementService {
@@ -46,13 +49,8 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	}
 	
 	@Override
-	public List<PatientQueue> getPatientQueueByVisitroom(String visitroom) {
-		return dao.getPatientQueueByVisitroom(visitroom);
-	}
-	
-	@Override
-	public PatientQueue getPatientByIdentifier(String identifier) {
-		return dao.getPatientByIdentifier(identifier);
+	public List<PatientQueue> getPatientQueueByVisitroom(String visitroom, String dateCreated) throws ParseException {
+		return dao.getPatientQueueByVisitroom(visitroom, dateCreated);
 	}
 	
 	@Override
@@ -66,8 +64,8 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	}
 	
 	@Override
-	public PatientQueue getPatientByIdentifier(String visitroom, String identifier) {
-		return dao.getTokenByIdentifier(visitroom, identifier);
+	public PatientQueue getPatientByIdentifier(String identifier, Date dateCreated) throws APIException {
+		return dao.getTokenByIdentifier(identifier, dateCreated);
 	}
 	
 	@Transactional
@@ -79,6 +77,12 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	@Override
 	public void truncate() throws DAOException {
 		dao.truncate();
+	}
+	
+	@Transactional
+	@Override
+	public PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String visitroom, Date dateCreated) {
+		return dao.getPatientByIdentifierAndVisitroom(identifier, visitroom, dateCreated);
 	}
 	
 }
