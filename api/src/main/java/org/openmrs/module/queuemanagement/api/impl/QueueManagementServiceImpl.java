@@ -44,7 +44,7 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	
 	@Transactional
 	@Override
-	public PatientQueue save(PatientQueue queue) {
+	public PatientQueue save(PatientQueue queue) throws Exception {
 		return dao.save(queue);
 	}
 	

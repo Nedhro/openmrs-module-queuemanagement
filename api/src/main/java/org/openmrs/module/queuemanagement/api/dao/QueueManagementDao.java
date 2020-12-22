@@ -37,31 +37,28 @@ public class QueueManagementDao {
 	}
 	
 	@Transactional
-	public PatientQueue save(PatientQueue queue) {
-		try {
-			String date = String.valueOf(new Date());
-			Date d = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-			PatientQueue checkIdentifier = this.getPatientByIdentifier(queue.getIdentifier(), d);
-			System.out.println("Data by Identifier: " + checkIdentifier);
-			//Queue Count
-			List<PatientQueue> queues = this.countIdentifier(queue.getVisitroom(), d);
-			System.out.println("Queue size in the room: " + queues + " Size:" + queues.size());
-			int token = queues.size() + 1;
-			if (checkIdentifier != null) {
-				this.updateStatus(checkIdentifier);
-				
-				queue.setToken(token);
-				getSession().persist(queue);
-				System.out.println("Patient Queue Added: " + queue);
-			}
-			if (queue.getId() == null) {
-				queue.setToken(token);
-				getSession().persist(queue);
-				System.out.println("Patient Queue Added: " + queue);
-			}
+	public PatientQueue save(PatientQueue queue) throws Exception {
+		System.out.println("Queue to Save ::" + queue);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = dateFormat.parse(dateFormat.format(new Date()));
+		System.out.println("Date New :: " + date);
+		PatientQueue checkIdentifier = this.getPatientByIdentifier(queue.getIdentifier(), date);
+		System.out.println("Data by Identifier: " + checkIdentifier);
+		//Queue Count
+		List<PatientQueue> queues = this.countIdentifier(queue.getVisitroom(), date);
+		System.out.println("Queue size in the room: " + queues + " Size:" + queues.size());
+		int token = queues.size() + 1;
+		if (checkIdentifier != null) {
+			this.updateStatus(checkIdentifier);
+			
+			queue.setToken(token);
+			getSession().persist(queue);
+			System.out.println("Patient Queue Added: " + queue);
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		if (queue.getId() == null) {
+			queue.setToken(token);
+			getSession().persist(queue);
+			System.out.println("Patient Queue Added: " + queue);
 		}
 		return queue;
 	}
@@ -80,8 +77,8 @@ public class QueueManagementDao {
 		System.out.println("Date :: " + d);
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("visitroom", visitroom));
-		criteria.add(Restrictions.eq("status", true));
 		criteria.add(Restrictions.eq("dateCreated", d));
+		criteria.add(Restrictions.eq("status", true));
 		return criteria.list();
 	}
 	
@@ -100,7 +97,7 @@ public class QueueManagementDao {
 		return queueList;
 	}
 	
-	public List<PatientQueue> countIdentifier(String visitroom, Date d) throws ParseException {
+	public List<PatientQueue> countIdentifier(String visitroom, Date d) {
 		SQLQuery criteria = getSession()
 		        .createSQLQuery(
 		            "select distinct identifier from queue_v4 where visitroom =\'" + visitroom + "\' and date_created=\'"

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,18 +51,19 @@ public class QueueController {
 	
 	@RequestMapping(value = "/module/queuemanagement/generate", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Object> saveQueue(@Valid @RequestBody PatientQueue queue) {
+	public ResponseEntity<Object> saveQueue(@Valid @RequestBody PatientQueue queue) throws IOException {
 		System.out.println("Submitted Queue :: " + queue.getDateCreated() + " :: " + queue.getVisitroom());
 		try {
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifier(queue.getVisitroom(),
 			    queue.getDateCreated());
+			System.out.println("Patient Queue Exists ::" + patientQueue);
 			if (patientQueue == null) {
 				this.queueManagementService.save(queue);
 				log.info("Queue ::" + queue);
 				System.out.println("Queue :: " + queue);
 				return new ResponseEntity<Object>(queue, HttpStatus.CREATED);
 			}
-			return new ResponseEntity<Object>(queue, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Object>(queue, HttpStatus.IM_USED);
 		}
 		catch (Exception e) {
 			log.error("Runtime error while trying to create new queue", e.getCause());
