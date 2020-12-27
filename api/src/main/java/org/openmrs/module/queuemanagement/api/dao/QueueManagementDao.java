@@ -40,7 +40,7 @@ public class QueueManagementDao {
 	public PatientQueue save(PatientQueue queue) throws Exception {
 		System.out.println("Queue to Save ::" + queue);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = dateFormat.parse(dateFormat.format(new Date()));
+		Date date = dateFormat.parse(dateFormat.format(queue.getDateCreated()));
 		System.out.println("Date New :: " + date);
 		PatientQueue checkIdentifier = this.getPatientByIdentifier(queue.getIdentifier(), date);
 		System.out.println("Data by Identifier: " + checkIdentifier);
@@ -86,6 +86,7 @@ public class QueueManagementDao {
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("identifier", identifier));
 		criteria.add(Restrictions.eq("dateCreated", dateCreated));
+		criteria.add(Restrictions.eq("status", true));
 		return (PatientQueue) criteria.uniqueResult();
 	}
 	
@@ -97,16 +98,15 @@ public class QueueManagementDao {
 		return queueList;
 	}
 	
-	public List<PatientQueue> countIdentifier(String visitroom, Date d) {
-		SQLQuery criteria = getSession()
-		        .createSQLQuery(
-		            "select distinct identifier from queue_v4 where visitroom =\'" + visitroom + "\' and date_created=\'"
-		                    + d + "\'");
+	public List<PatientQueue> countIdentifier(String room, Date d) {
+		Criteria criteria = getSession().createCriteria(PatientQueue.class);
+		criteria.add(Restrictions.eq("visitroom", room));
+		criteria.add(Restrictions.eq("dateCreated", d));
 		return criteria.list();
 	}
 	
 	public List<Object> getAllVisitroom() {
-		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from queue_v4");
+		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from queue_v5");
 		return criteria.list();
 	}
 	
@@ -117,7 +117,7 @@ public class QueueManagementDao {
 	}
 	
 	public void truncate() throws DAOException {
-		getSession().createSQLQuery("truncate table queue_v4").executeUpdate();
+		getSession().createSQLQuery("truncate table queue_v5").executeUpdate();
 	}
 	
 	@Transactional

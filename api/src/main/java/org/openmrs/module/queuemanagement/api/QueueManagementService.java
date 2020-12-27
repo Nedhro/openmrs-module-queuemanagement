@@ -44,17 +44,19 @@ public interface QueueManagementService extends OpenmrsService {
 	List<PatientQueue> getPatientQueueByVisitroom(String visitroom, String dateCreated) throws ParseException;
 	
 	@Transactional
-	PatientQueue getPatientByIdentifier(String identifier, Date dateCreated) throws APIException;
-	
-	@Transactional
 	List<PatientQueue> getAllQueueId() throws APIException;
 	
 	@Transactional
 	List<Object> getAllVisitroom() throws APIException;
 	
+	@Transactional
 	void update(PatientQueue queue) throws APIException;
 	
 	void truncate() throws DAOException;
 	
+	@Transactional
 	PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String visitroom, Date dateCreated);
+	
+	@Transactional
+	PatientQueue getTokenByIdentifier(String identifier, Date date);
 }

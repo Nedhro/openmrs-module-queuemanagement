@@ -54,8 +54,11 @@ public class QueueController {
 	public ResponseEntity<Object> saveQueue(@Valid @RequestBody PatientQueue queue) throws IOException {
 		System.out.println("Submitted Queue :: " + queue.getDateCreated() + " :: " + queue.getVisitroom());
 		try {
-			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifier(queue.getVisitroom(),
-			    queue.getDateCreated());
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = dateFormat.parse(dateFormat.format(queue.getDateCreated()));
+			System.out.println("Date New :: " + date);
+			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(
+			    queue.getIdentifier(), queue.getVisitroom(), date);
 			System.out.println("Patient Queue Exists ::" + patientQueue);
 			if (patientQueue == null) {
 				this.queueManagementService.save(queue);
@@ -73,26 +76,36 @@ public class QueueController {
 	
 	@RequestMapping(value = "/module/queuemanagement/updateQueue", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Object> updateQueue(@Valid @RequestBody PatientQueue queue) throws ParseException {
+	public ResponseEntity<Object> updateQueue(@RequestParam(value = "identifier") String identifier,
+	        @RequestParam(value = "visitroom") String visitroom) throws ParseException {
 		try {
-			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(
-			    queue.getIdentifier(), queue.getVisitroom(), queue.getDateCreated());
-			if (patientQueue == null) {
-				throw new RuntimeException("Queue does not exist");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = dateFormat.parse(dateFormat.format(new Date()));
+			System.out.println("Date New :: " + date);
+			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier,
+			    visitroom, date);
+			if (patientQueue != null) {
+				if (patientQueue.getStatus() == true) {
+					patientQueue.setStatus(false);
+					this.queueManagementService.update(patientQueue);
+					return new ResponseEntity<Object>(patientQueue, HttpStatus.ACCEPTED);
+				}
+				
+				this.queueManagementService.update(patientQueue);
+				return new ResponseEntity<Object>(patientQueue, HttpStatus.ALREADY_REPORTED);
 			}
-			this.queueManagementService.update(patientQueue);
-			return new ResponseEntity<Object>(patientQueue, HttpStatus.OK);
+			throw new RuntimeException("Queue does not exist");
 		}
 		catch (RuntimeException e) {
-			log.error("Runtime error while trying to undo appointment status", e);
+			log.error("Runtime error while trying to update Queue", e);
 			return new ResponseEntity<Object>(e.getCause(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@RequestMapping(value = "/module/queuemanagement/queueByVisitroom", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom", required = true) String visitroom,
-	        @RequestParam(value = "dateCreated", required = true) String dateCreated) throws ParseException {
+	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom") String visitroom,
+	        @RequestParam(value = "dateCreated") String dateCreated) throws ParseException {
 		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(visitroom, dateCreated);
 		if (obs == null) {
 			log.info("No Queue data found...");
@@ -117,7 +130,8 @@ public class QueueController {
 		PatientQueue patient = null;
 		try {
 			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateCreated);
-			patient = queueManagementService.getPatientByIdentifier(identifier, date);
+			patient = queueManagementService.getTokenByIdentifier(identifier, date);
+			return patient;
 		}
 		catch (ParseException e) {
 			e.printStackTrace();

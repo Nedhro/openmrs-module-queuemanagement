@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.queuemanagement.api.impl;
 
-import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -63,11 +62,6 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 		return dao.getAllVisitroom();
 	}
 	
-	@Override
-	public PatientQueue getPatientByIdentifier(String identifier, Date dateCreated) throws APIException {
-		return dao.getTokenByIdentifier(identifier, dateCreated);
-	}
-	
 	@Transactional
 	@Override
 	public void update(PatientQueue queue) {
@@ -83,6 +77,11 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	@Override
 	public PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String visitroom, Date dateCreated) {
 		return dao.getPatientByIdentifierAndVisitroom(identifier, visitroom, dateCreated);
+	}
+	
+	@Override
+	public PatientQueue getTokenByIdentifier(String identifier, Date date) {
+		return dao.getTokenByIdentifier(identifier, date);
 	}
 	
 }
