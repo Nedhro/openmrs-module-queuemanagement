@@ -5,22 +5,22 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
-    <changeSet id="queuemanagement-2020-v5" author="nidhro">
+    <changeSet id="queuemanagement-2020-v6" author="nidhro">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="queue_v5"/>
+                <tableExists tableName="queue_v6"/>
             </not>
         </preConditions>
         <comment>
-            Creating the queue_v5 table
+            Creating the queue_v6 table
         </comment>
         <sql>
-            CREATE TABLE IF NOT EXISTS queue_v5 (
+            CREATE TABLE IF NOT EXISTS queue_v6 (
             queueid INT NOT NULL AUTO_INCREMENT ,
             token VARCHAR(50) NOT NULL,
             identifier VARCHAR(50) NOT NULL ,
             visitroom VARCHAR(50) NOT NULL ,
-            room_name VARCHAR(50) NULL,
+            room_id VARCHAR(50) NULL,
             date_created DATE NOT NULL,
             status TINYINT NULL,
             PRIMARY KEY (queueid))

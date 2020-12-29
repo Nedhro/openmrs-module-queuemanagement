@@ -106,18 +106,19 @@ public class QueueManagementDao {
 	}
 	
 	public List<Object> getAllVisitroom() {
-		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from queue_v5");
+		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from queue_v6");
 		return criteria.list();
 	}
 	
 	@Transactional
 	public PatientQueue update(PatientQueue queue) {
 		getSession().saveOrUpdate(queue);
+		System.out.println("Updated Queue :: " + queue);
 		return queue;
 	}
 	
 	public void truncate() throws DAOException {
-		getSession().createSQLQuery("truncate table queue_v5").executeUpdate();
+		getSession().createSQLQuery("truncate table queue_v6").executeUpdate();
 	}
 	
 	@Transactional

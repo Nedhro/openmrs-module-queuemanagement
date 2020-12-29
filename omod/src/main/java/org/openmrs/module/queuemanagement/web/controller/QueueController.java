@@ -102,11 +102,41 @@ public class QueueController {
 		}
 	}
 	
+	@RequestMapping(value = "/module/queuemanagement/reconsult", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Object> reconsult(@RequestParam(value = "identifier") String identifier,
+	        @RequestParam(value = "visitroom") String visitroom) throws ParseException {
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = dateFormat.parse(dateFormat.format(new Date()));
+			System.out.println("Date New :: " + date);
+			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier,
+			    visitroom, date);
+			if (patientQueue != null) {
+				if (patientQueue.getStatus() == false) {
+					patientQueue.setStatus(true);
+					this.queueManagementService.update(patientQueue);
+					return new ResponseEntity<Object>(patientQueue, HttpStatus.ACCEPTED);
+				}
+				
+				this.queueManagementService.update(patientQueue);
+				return new ResponseEntity<Object>(patientQueue, HttpStatus.ALREADY_REPORTED);
+			}
+			throw new RuntimeException("Queue does not exist");
+		}
+		catch (RuntimeException e) {
+			log.error("Runtime error while trying to update Queue", e);
+			return new ResponseEntity<Object>(e.getCause(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@RequestMapping(value = "/module/queuemanagement/queueByVisitroom", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom") String visitroom,
-	        @RequestParam(value = "dateCreated") String dateCreated) throws ParseException {
-		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(visitroom, dateCreated);
+	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom") String visitroom) throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String date = dateFormat.format(new Date());
+		System.out.println("Date New :: " + date);
+		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(visitroom, date);
 		if (obs == null) {
 			log.info("No Queue data found...");
 		} else {

@@ -18,15 +18,6 @@
     }
 </style>
 <script type="text/javascript">
-    function getPatientQueue(visitroom) {
-        let room = visitroom;
-        console.log(room);
-        let url = "/openmrs/module/queuemanagement/queueByVisitroom.form?visitroom=" + room;
-        $.get(url, function (data, status) {
-            console.log("Data: " + data + "\nStatus: " + status);
-        });
-    };
-
     function getVisitRooms() {
         let url = "/openmrs/module/queuemanagement/visitrooms.form";
         $.get(url, function (data1, status1) {
@@ -53,6 +44,9 @@
     };
     $(document).ready(function () {
         getVisitRooms();
+        setTimeout(function(){
+            location.reload(true);
+        }, 60000);
     });
 </script>
 

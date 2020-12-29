@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity(name = "queuemanagement.PatientQueue")
-@Table(name = "queue_v5")
+@Table(name = "queue_v6")
 public class PatientQueue implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -30,8 +30,8 @@ public class PatientQueue implements Serializable {
 	private String visitroom;
 	
 	@Basic(optional = false, fetch = FetchType.EAGER)
-	@Column(name = "room_name")
-	private String roomName;
+	@Column(name = "room_id")
+	private String roomId;
 	
 	@Basic(optional = false, fetch = FetchType.EAGER)
 	@Column(name = "date_created", updatable = true)
@@ -46,10 +46,10 @@ public class PatientQueue implements Serializable {
 	public PatientQueue() {
 	}
 	
-	public PatientQueue(String identifier, String visitroom, String roomName, Date dateCreated, Boolean status) {
+	public PatientQueue(String identifier, String visitroom, String roomId, Date dateCreated, Boolean status) {
 		this.identifier = identifier;
 		this.visitroom = visitroom;
-		this.roomName = roomName;
+		this.roomId = roomId;
 		this.dateCreated = dateCreated;
 		this.status = status;
 	}
@@ -86,12 +86,12 @@ public class PatientQueue implements Serializable {
 		this.visitroom = visitroom;
 	}
 	
-	public String getRoomName() {
-		return roomName;
+	public String getRoomId() {
+		return roomId;
 	}
 	
-	public void setRoomName(String roomName) {
-		this.roomName = roomName;
+	public void setRoomId(String roomId) {
+		this.roomId = roomId;
 	}
 	
 	public Date getDateCreated() {
@@ -113,7 +113,7 @@ public class PatientQueue implements Serializable {
 	@Override
 	public String toString() {
 		return "PatientQueue{" + "id=" + id + ", token=" + token + ", identifier='" + identifier + '\'' + ", visitroom='"
-		        + visitroom + '\'' + ", roomName='" + roomName + '\'' + ", dateCreated=" + dateCreated + ", status="
-		        + status + '}';
+		        + visitroom + '\'' + ", roomId='" + roomId + '\'' + ", dateCreated=" + dateCreated + ", status=" + status
+		        + '}';
 	}
 }
