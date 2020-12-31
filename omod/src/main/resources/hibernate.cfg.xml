@@ -18,7 +18,9 @@
         <!-- Drop and re-create the database schema on startup -->
         <property name="hbm2ddl.auto">update</property>
         <mapping resource="PatientQueue.hbm.xml"/>
-        <mapping class="org.openmrs.module.queuemanagement.PatientQueue"></mapping>
+        <mapping class="org.openmrs.module.queuemanagement.model.PatientQueue"></mapping>
+        <mapping resource="HospitalInfo.hbm.xml"/>
+        <mapping class="org.openmrs.module.queuemanagement.model.HospitalInfo"></mapping>
     </session-factory>
 
 </hibernate-configuration>

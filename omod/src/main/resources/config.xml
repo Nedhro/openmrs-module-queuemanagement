@@ -18,7 +18,10 @@
 	<!-- /Base Module Properties -->
 	
 	<require_version>1.11.6</require_version>
-	<mappingFiles>PatientQueue.hbm.xml</mappingFiles>
+	<mappingFiles>
+		PatientQueue.hbm.xml
+		HospitalInfo.hbm.xml
+	</mappingFiles>
 	
 	<!-- Extensions -->
 	<extension>

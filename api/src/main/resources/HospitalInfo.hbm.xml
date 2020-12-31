@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.openmrs.module.queuemanagement">
+    <class name="org.openmrs.module.queuemanagement.model.HospitalInfo" table="hospital_info_v1" lazy="false">
+        <id name="id" column="hid">
+            <generator class="native"/>
+        </id>
+        <property name="name" type="java.lang.String" column="name" length="255"/>
+        <property name="address" type="java.lang.String" column="address" length="255"/>
+        <property name="email" type="java.lang.String" column="email" length="255"/>
+        <property name="mobile" type="java.lang.String" column="mobile" length="255"/>
+    </class>
+</hibernate-mapping>

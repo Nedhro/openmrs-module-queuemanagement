@@ -1,6 +1,5 @@
-<%@ include file="/WEB-INF/template/include.jsp" %>
-
-<%@ include file="/WEB-INF/template/header.jsp" %>
+<%@ include file="layout/header.jsp" %>
+<META HTTP-EQUIV="Refresh" CONTENT="30">
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap.min.css">
@@ -20,12 +19,12 @@
 <script type="text/javascript">
     function getVisitRooms() {
         let url = "/openmrs/module/queuemanagement/visitrooms.form";
-        $.get(url, function (data1, status1) {
-            console.log("Rooms : " + data1 + "\nStatus: " + status1);
+        $.get(url, function (roomData, status1) {
+            console.log("Rooms :: " + roomData + "\nStatus :: " + status1);
             let queueTable = $('#patientQueue');
             queueTable.find("tbody tr").remove();
-            for (let i = 0; i < data1.length; i++) {
-                let visitRooms = data1[i];
+            for (let i = 0; i < roomData.length; i++) {
+                let visitRooms = roomData[i];
                 console.log(visitRooms);
                 let url = "/openmrs/module/queuemanagement/queueByVisitroom.form?visitroom=" + visitRooms;
                 $.get(url, function (queueData, status2) {
@@ -44,20 +43,15 @@
     };
     $(document).ready(function () {
         getVisitRooms();
-        setTimeout(function(){
-            location.reload(true);
-        }, 60000);
     });
 </script>
 
-<h2 class="headText">Patients Queue Dashboard</h2>
-<br/>
 <div class="container row">
     <table id="patientQueue" class="table table-striped table-bordered" style="width:100%">
         <thead class="thead-dark">
         <tr>
-            <th>OPD Visit Room</th>
-            <th>Queues by Serial</th>
+            <th>রুম নম্বর</th>
+            <th>রোগীর সিরিয়াল নম্বর</th>
         </tr>
         </thead>
         <tbody>
@@ -71,8 +65,6 @@
         </tr>
         </tbody>
     </table>
-
 </div>
 
-
-<%@ include file="/WEB-INF/template/footer.jsp" %>
+<%@ include file="layout/footer.jsp" %>

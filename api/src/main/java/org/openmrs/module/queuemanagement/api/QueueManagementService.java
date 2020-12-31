@@ -12,7 +12,7 @@ package org.openmrs.module.queuemanagement.api;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.api.db.DAOException;
-import org.openmrs.module.queuemanagement.PatientQueue;
+import org.openmrs.module.queuemanagement.model.PatientQueue;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;

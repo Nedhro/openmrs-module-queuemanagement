@@ -44,7 +44,7 @@ public class AdminList extends AdministrationSectionExt {
 		Map<String, String> map = new HashMap<String, String>();
 		
 		map.put("module/queuemanagement/dashboard.form", "Queue Dashboard");
-		map.put("module/queuemanagement/roomWiseQueue.form", "OPD Room Queue");
+		map.put("module/queuemanagement/saveHospitalInfo.form", "Add Hospital Info");
 		map.put("module/queuemanagement/allqueues.form", "Queue List");
 		
 		return map;

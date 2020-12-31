@@ -2,9 +2,8 @@ package org.openmrs.module.queuemanagement.web.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.queuemanagement.PatientQueue;
 import org.openmrs.module.queuemanagement.api.QueueManagementService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.openmrs.module.queuemanagement.model.PatientQueue;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,18 +21,7 @@ public class QueueController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	@Autowired
-	private QueueManagementService queueManagementService;
-	
-	@RequestMapping("/module/queuemanagement/dashboard")
-	public String showDashboard() {
-		return "/module/queuemanagement/dashboard";
-	}
-	
-	@RequestMapping("/module/queuemanagement/roomWiseQueue")
-	public String showQueueRoomWise() {
-		return "/module/queuemanagement/roomQueue";
-	}
+	QueueManagementService queueManagementService;
 	
 	@RequestMapping(value = "/module/queuemanagement/allqueues", method = RequestMethod.GET)
 	@ResponseBody
