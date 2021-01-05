@@ -106,7 +106,7 @@ public class QueueManagementDao {
 	}
 	
 	public List<Object> getAllVisitroom() {
-		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from queue_v6");
+		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from queue_v7");
 		return criteria.list();
 	}
 	
@@ -118,7 +118,7 @@ public class QueueManagementDao {
 	}
 	
 	public void truncate() throws DAOException {
-		getSession().createSQLQuery("truncate table queue_v6").executeUpdate();
+		getSession().createSQLQuery("truncate table queue_v7").executeUpdate();
 	}
 	
 	@Transactional

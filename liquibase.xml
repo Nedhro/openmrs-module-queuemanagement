@@ -5,17 +5,17 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
-    <changeSet id="queuemanagement-2020-v6" author="nidhro">
+    <changeSet id="queuemanagement-2020-v7" author="nidhro">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="queue_v6"/>
+                <tableExists tableName="queue_v7"/>
             </not>
         </preConditions>
         <comment>
-            Creating the queue_v6 table
+            Creating the queue_v7 table
         </comment>
         <sql>
-            CREATE TABLE IF NOT EXISTS queue_v6 (
+            CREATE TABLE IF NOT EXISTS queue_v7 (
             queueid INT NOT NULL AUTO_INCREMENT ,
             token VARCHAR(50) NOT NULL,
             identifier VARCHAR(50) NOT NULL ,
@@ -26,5 +26,25 @@
             PRIMARY KEY (queueid))
         </sql>
     </changeSet>
+
+    <!-- <changeSet id="global-property-queuemng-assigned-sql" author="Nidhro, Atuar">
+         <preConditions onFail="MARK_RAN">
+             <sqlCheck expectedResult="0">select count(*) from global_property where
+                 property='emrapi.sqlSearch.myreferredpatient'
+             </sqlCheck>
+         </preConditions>
+         <comment>Adding query to fetch upcoming Queue for patient</comment>
+         <sqlFile path="assignedPatient.sql"/>
+     </changeSet>
+
+     <changeSet id="global-property-queuemng-consulted-sql" author="Nidhro, Atuar">
+         <preConditions onFail="MARK_RAN">
+             <sqlCheck expectedResult="0">select count(*) from global_property where
+                 property='emrapi.sqlSearch.consultationdone'
+             </sqlCheck>
+         </preConditions>
+         <comment>Adding query to fetch Consultation done patients</comment>
+         <sqlFile path="consultationDonePatients.sql"/>
+     </changeSet>-->
 
 </databaseChangeLog>

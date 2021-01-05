@@ -1,7 +1,7 @@
-<%@ include file="/WEB-INF/template/include.jsp" %>
-
-<%@ include file="/WEB-INF/template/header.jsp" %>
-
+<meta http-equiv="Refresh" content="30"/>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Galada&display=swap">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -11,11 +11,31 @@
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
 
 <style>
-    .headText {
-        background: rgb(0, 3, 36);
-        background: linear-gradient(90deg, rgba(0, 3, 36, 1) 0%, rgba(9, 121, 97, 1) 54%, rgba(0, 212, 255, 1) 100%);
-        color: white;
-    }
+		@import url('https://fonts.googleapis.com/css2?family=Galada&display=swap');
+		@import url('fonts/Siyamrupali.ttf');
+		@import url('fonts/Nikosh.ttf');
+
+		div {
+				font-family: 'Nikosh', Fallback, sans-serif !important;
+		}
+
+		.headText {
+				background: rgb(0, 3, 36);
+				background: linear-gradient(90deg, rgba(0, 3, 36, 1) 0%, rgba(9, 121, 97, 1) 54%, rgba(0, 212, 255, 1) 100%);
+				color: white;
+		}
+
+		.footer {
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+				text-align: center;
+		}
+
+		.banglaFont {
+				font-family: 'Nikosh', Fallback, sans-serif !important;
+		}
 </style>
 <script type="text/javascript">
     function getVisitRooms() {
@@ -44,35 +64,41 @@
     };
     $(document).ready(function () {
         getVisitRooms();
-        setTimeout(function(){
-            location.reload(true);
-        }, 60000);
     });
 </script>
+<div class="container-fluid">
+		<div class="row headText">
+				<div class="col-md-12">
+						<img src="/bahmni_config/openmrs/images/hospitalBanner.png" width="100%;">
+				</div>
+		</div>
+		<h2 class="text-center font-weight-bold text-info"><span><spring:message code="patientDashboard"/></span></h2>
+		<div class="container row" style="width: 100%">
+				<div class="col-md-12 m-1">
+						<table id="patientQueue" class="table table-striped table-bordered" style="width:100%">
+								<thead class="thead-dark">
+								<tr>
+										<th><span class="banglaFont">Room No</span></th>
+										<th><span class="banglaFont">Patients Serial No</span></th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr></tr>
+								</tbody>
+						</table>
+				</div>
+		</div>
+</div>
+<div class="container marquee" style="font-size: 18px; font-weight: bold; height: 25px;">
+		<marquee width="100%" behavior="alternate" bgcolor="yellow">
+				<span class="banglaFont">*** Please wear a mask</span>
+				<span class="banglaFont">*** Maintain physical distance from each other </span>
+				<span class="banglaFont">*** Follow the  hygiene rules ***</span>
+		</marquee>
+</div>
 
-<h2 class="headText">Patients Queue Dashboard</h2>
-<br/>
-<div class="container row">
-    <table id="patientQueue" class="table table-striped table-bordered" style="width:100%">
-        <thead class="thead-dark">
-        <tr>
-            <th>OPD Visit Room</th>
-            <th>Queues by Serial</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <%--           <c:forEach var="developer" items="${visitrooms}">
-                           <td>${developer.jobid}</td>
-                       </c:forEach>
-                       <c:forEach var="developer" items="${listDeveloper}">
-                           <td>${developer.jobid}</td>
-                       </c:forEach>--%>
-        </tr>
-        </tbody>
-    </table>
-
+<div class="footer headText">
+		<p><b>Powered By : </b> Crystal Technology Bangladesh Ltd.</p>
 </div>
 
 
-<%@ include file="/WEB-INF/template/footer.jsp" %>
