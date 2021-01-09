@@ -59,7 +59,7 @@ public class QueueController {
 			Date date = dateFormat.parse(dateFormat.format(queue.getDateCreated()));
 			System.out.println("Date New :: " + date);
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(
-			    queue.getIdentifier(), queue.getVisitroom(), date);
+			    queue.getIdentifier(), queue.getRoomId(), date);
 			System.out.println("Patient Queue Exists ::" + patientQueue);
 			if (patientQueue == null) {
 				this.queueManagementService.save(queue);
@@ -78,13 +78,13 @@ public class QueueController {
 	@RequestMapping(value = "/module/queuemanagement/updateQueue", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Object> updateQueue(@RequestParam(value = "identifier") String identifier,
-	        @RequestParam(value = "visitroom") String visitroom) throws ParseException {
+	        @RequestParam(value = "roomId") String roomId) throws ParseException {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = dateFormat.parse(dateFormat.format(new Date()));
 			System.out.println("Date New :: " + date);
-			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier,
-			    visitroom, date);
+			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier, roomId,
+			    date);
 			if (patientQueue != null) {
 				if (patientQueue.getStatus() == true) {
 					patientQueue.setStatus(false);
@@ -106,13 +106,13 @@ public class QueueController {
 	@RequestMapping(value = "/module/queuemanagement/reconsult", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Object> reconsult(@RequestParam(value = "identifier") String identifier,
-	        @RequestParam(value = "visitroom") String visitroom) throws ParseException {
+	        @RequestParam(value = "roomId") String roomId) throws ParseException {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = dateFormat.parse(dateFormat.format(new Date()));
 			System.out.println("Date New :: " + date);
-			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier,
-			    visitroom, date);
+			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier, roomId,
+			    date);
 			if (patientQueue != null) {
 				if (patientQueue.getStatus() == false) {
 					patientQueue.setStatus(true);
@@ -133,15 +133,15 @@ public class QueueController {
 	
 	@RequestMapping(value = "/module/queuemanagement/queueByVisitroom", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom") String visitroom) throws ParseException {
+	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "roomId") String roomId) throws ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String date = dateFormat.format(new Date());
 		System.out.println("Date New :: " + date);
-		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(visitroom, date);
+		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(roomId, date);
 		if (obs == null) {
 			log.info("No Queue data found...");
 		} else {
-			System.out.println("Queues :: " + obs);
+			System.out.println("Queues last six :: " + obs);
 			return obs;
 		}
 		return obs;

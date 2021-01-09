@@ -45,7 +45,7 @@ public class QueueManagementDao {
 		PatientQueue checkIdentifier = this.getPatientByIdentifier(queue.getIdentifier(), date);
 		System.out.println("Data by Identifier: " + checkIdentifier);
 		//Queue Count
-		List<PatientQueue> queues = this.countIdentifier(queue.getVisitroom(), date);
+		List<PatientQueue> queues = this.countIdentifier(queue.getRoomId(), date);
 		System.out.println("Queue size in the room: " + queues + " Size:" + queues.size());
 		int token = queues.size() + 1;
 		if (checkIdentifier != null) {
@@ -72,13 +72,14 @@ public class QueueManagementDao {
 		return queue;
 	}
 	
-	public List<PatientQueue> getPatientQueueByVisitroom(String visitroom, String dateCreated) throws ParseException {
+	public List<PatientQueue> getPatientQueueByVisitroom(String roomId, String dateCreated) throws ParseException {
 		Date d = new SimpleDateFormat("yyyy-MM-dd").parse(dateCreated);
 		System.out.println("Date :: " + d);
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
-		criteria.add(Restrictions.eq("visitroom", visitroom));
+		criteria.add(Restrictions.eq("roomId", roomId));
 		criteria.add(Restrictions.eq("dateCreated", d));
 		criteria.add(Restrictions.eq("status", true));
+		criteria.setMaxResults(6);
 		return criteria.list();
 	}
 	
@@ -98,9 +99,9 @@ public class QueueManagementDao {
 		return queueList;
 	}
 	
-	public List<PatientQueue> countIdentifier(String room, Date d) {
+	public List<PatientQueue> countIdentifier(String roomId, Date d) {
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
-		criteria.add(Restrictions.eq("visitroom", room));
+		criteria.add(Restrictions.eq("roomId", roomId));
 		criteria.add(Restrictions.eq("dateCreated", d));
 		return criteria.list();
 	}
@@ -122,10 +123,10 @@ public class QueueManagementDao {
 	}
 	
 	@Transactional
-	public PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String visitroom, Date dateCreated) {
+	public PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String roomId, Date dateCreated) {
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("identifier", identifier));
-		criteria.add(Restrictions.eq("visitroom", visitroom));
+		criteria.add(Restrictions.eq("roomId", roomId));
 		criteria.add(Restrictions.eq("dateCreated", dateCreated));
 		return (PatientQueue) criteria.uniqueResult();
 	}

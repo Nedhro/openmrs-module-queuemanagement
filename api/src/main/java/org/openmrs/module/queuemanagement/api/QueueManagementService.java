@@ -41,7 +41,7 @@ public interface QueueManagementService extends OpenmrsService {
 	PatientQueue save(PatientQueue queue) throws Exception;
 	
 	@Transactional
-	List<PatientQueue> getPatientQueueByVisitroom(String visitroom, String dateCreated) throws ParseException;
+	List<PatientQueue> getPatientQueueByVisitroom(String roomId, String dateCreated) throws ParseException;
 	
 	@Transactional
 	List<PatientQueue> getAllQueueId() throws APIException;
@@ -55,7 +55,7 @@ public interface QueueManagementService extends OpenmrsService {
 	void truncate() throws DAOException;
 	
 	@Transactional
-	PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String visitroom, Date dateCreated);
+	PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String roomId, Date dateCreated);
 	
 	@Transactional
 	PatientQueue getTokenByIdentifier(String identifier, Date date);
