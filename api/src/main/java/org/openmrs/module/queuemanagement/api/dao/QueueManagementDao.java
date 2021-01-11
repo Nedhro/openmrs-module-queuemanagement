@@ -72,11 +72,11 @@ public class QueueManagementDao {
 		return queue;
 	}
 	
-	public List<PatientQueue> getPatientQueueByVisitroom(String roomId, String dateCreated) throws ParseException {
+	public List<PatientQueue> getPatientQueueByVisitroom(String visitroom, String dateCreated) throws ParseException {
 		Date d = new SimpleDateFormat("yyyy-MM-dd").parse(dateCreated);
 		System.out.println("Date :: " + d);
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
-		criteria.add(Restrictions.eq("roomId", roomId));
+		criteria.add(Restrictions.eq("visitroom", visitroom));
 		criteria.add(Restrictions.eq("dateCreated", d));
 		criteria.add(Restrictions.eq("status", true));
 		criteria.setMaxResults(6);

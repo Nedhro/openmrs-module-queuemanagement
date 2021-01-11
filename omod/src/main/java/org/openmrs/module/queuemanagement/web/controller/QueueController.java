@@ -133,11 +133,11 @@ public class QueueController {
 	
 	@RequestMapping(value = "/module/queuemanagement/queueByVisitroom", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "roomId") String roomId) throws ParseException {
+	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom") String visitroom) throws ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String date = dateFormat.format(new Date());
 		System.out.println("Date New :: " + date);
-		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(roomId, date);
+		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(visitroom, date);
 		if (obs == null) {
 			log.info("No Queue data found...");
 		} else {

@@ -48,8 +48,8 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	}
 	
 	@Override
-	public List<PatientQueue> getPatientQueueByVisitroom(String roomId, String dateCreated) throws ParseException {
-		return dao.getPatientQueueByVisitroom(roomId, dateCreated);
+	public List<PatientQueue> getPatientQueueByVisitroom(String visitroom, String dateCreated) throws ParseException {
+		return dao.getPatientQueueByVisitroom(visitroom, dateCreated);
 	}
 	
 	@Override

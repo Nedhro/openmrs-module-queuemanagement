@@ -41,7 +41,7 @@ public interface QueueManagementService extends OpenmrsService {
 	PatientQueue save(PatientQueue queue) throws Exception;
 	
 	@Transactional
-	List<PatientQueue> getPatientQueueByVisitroom(String roomId, String dateCreated) throws ParseException;
+	List<PatientQueue> getPatientQueueByVisitroom(String visitroom, String dateCreated) throws ParseException;
 	
 	@Transactional
 	List<PatientQueue> getAllQueueId() throws APIException;
