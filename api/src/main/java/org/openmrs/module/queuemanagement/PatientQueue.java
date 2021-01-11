@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity(name = "queuemanagement.PatientQueue")
-@Table(name = "queue_v6")
+@Table(name = "queue_v7")
 public class PatientQueue implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

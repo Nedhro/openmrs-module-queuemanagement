@@ -55,7 +55,7 @@ public interface QueueManagementService extends OpenmrsService {
 	void truncate() throws DAOException;
 	
 	@Transactional
-	PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String visitroom, Date dateCreated);
+	PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String roomId, Date dateCreated);
 	
 	@Transactional
 	PatientQueue getTokenByIdentifier(String identifier, Date date);

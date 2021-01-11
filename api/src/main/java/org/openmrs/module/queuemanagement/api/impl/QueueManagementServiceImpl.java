@@ -75,8 +75,8 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	
 	@Transactional
 	@Override
-	public PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String visitroom, Date dateCreated) {
-		return dao.getPatientByIdentifierAndVisitroom(identifier, visitroom, dateCreated);
+	public PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String roomId, Date dateCreated) {
+		return dao.getPatientByIdentifierAndVisitroom(identifier, roomId, dateCreated);
 	}
 	
 	@Override

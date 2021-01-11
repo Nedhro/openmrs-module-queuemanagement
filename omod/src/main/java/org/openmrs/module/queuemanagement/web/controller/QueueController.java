@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.MessageCodesResolver;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -58,7 +59,7 @@ public class QueueController {
 			Date date = dateFormat.parse(dateFormat.format(queue.getDateCreated()));
 			System.out.println("Date New :: " + date);
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(
-			    queue.getIdentifier(), queue.getVisitroom(), date);
+			    queue.getIdentifier(), queue.getRoomId(), date);
 			System.out.println("Patient Queue Exists ::" + patientQueue);
 			if (patientQueue == null) {
 				this.queueManagementService.save(queue);
@@ -77,13 +78,13 @@ public class QueueController {
 	@RequestMapping(value = "/module/queuemanagement/updateQueue", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Object> updateQueue(@RequestParam(value = "identifier") String identifier,
-	        @RequestParam(value = "visitroom") String visitroom) throws ParseException {
+	        @RequestParam(value = "roomId") String roomId) throws ParseException {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = dateFormat.parse(dateFormat.format(new Date()));
 			System.out.println("Date New :: " + date);
-			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier,
-			    visitroom, date);
+			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier, roomId,
+			    date);
 			if (patientQueue != null) {
 				if (patientQueue.getStatus() == true) {
 					patientQueue.setStatus(false);
@@ -105,13 +106,13 @@ public class QueueController {
 	@RequestMapping(value = "/module/queuemanagement/reconsult", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Object> reconsult(@RequestParam(value = "identifier") String identifier,
-	        @RequestParam(value = "visitroom") String visitroom) throws ParseException {
+	        @RequestParam(value = "roomId") String roomId) throws ParseException {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = dateFormat.parse(dateFormat.format(new Date()));
 			System.out.println("Date New :: " + date);
-			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier,
-			    visitroom, date);
+			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier, roomId,
+			    date);
 			if (patientQueue != null) {
 				if (patientQueue.getStatus() == false) {
 					patientQueue.setStatus(true);
@@ -140,7 +141,7 @@ public class QueueController {
 		if (obs == null) {
 			log.info("No Queue data found...");
 		} else {
-			System.out.println("Queues :: " + obs);
+			System.out.println("Queues last six :: " + obs);
 			return obs;
 		}
 		return obs;
