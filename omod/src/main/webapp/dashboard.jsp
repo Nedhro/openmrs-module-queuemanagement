@@ -72,7 +72,7 @@
 						<img src="/bahmni_config/openmrs/images/hospitalBanner.png" width="100%;">
 				</div>
 		</div>
-		<h2 class="text-center font-weight-bold text-info"><span><spring:message code="patientDashboard"/></span></h2>
+		<h2 class="text-center font-weight-bold text-info"><span><spring:message code="queuemanagement.patientDashboard"/></span></h2>
 		<div class="container row" style="width: 100%">
 				<div class="col-md-12 m-1">
 						<table id="patientQueue" class="table table-striped table-bordered" style="width:100%">

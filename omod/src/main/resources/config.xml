@@ -94,8 +94,8 @@
 		<file>messages.properties</file>
 	</messages>
 	<messages>
-		<lang>fr</lang>
-		<file>messages_fr.properties</file>
+		<lang>bn</lang>
+		<file>messages_bn.properties</file>
 	</messages>
 	<messages>
 		<lang>es</lang>
