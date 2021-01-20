@@ -21,21 +21,21 @@ import java.util.List;
 
 @Repository("queuemanagement.QueueManagementDao")
 public class QueueManagementDao {
-	
+
 	private Log logger = LogFactory.getLog(this.getClass());
-	
+
 	@Autowired
 	DbSessionFactory sessionFactory;
-	
+
 	private DbSession getSession() {
 		return sessionFactory.getCurrentSession();
 	}
-	
+
 	public PatientQueue getPatientByIdentifier(String identifier, Date dateCreated) {
 		return (PatientQueue) getSession().createCriteria(PatientQueue.class).add(Restrictions.eq("identifier", identifier))
 		        .add(Restrictions.eq("dateCreated", dateCreated)).add(Restrictions.eq("status", true)).uniqueResult();
 	}
-	
+
 	@Transactional
 	public PatientQueue save(PatientQueue queue) throws Exception {
 		System.out.println("Queue to Save ::" + queue);
@@ -50,7 +50,7 @@ public class QueueManagementDao {
 		int token = queues.size() + 1;
 		if (checkIdentifier != null) {
 			this.updateStatus(checkIdentifier);
-			
+
 			queue.setToken(token);
 			getSession().persist(queue);
 			System.out.println("Patient Queue Added: " + queue);
@@ -62,7 +62,7 @@ public class QueueManagementDao {
 		}
 		return queue;
 	}
-	
+
 	@Transactional
 	public PatientQueue updateStatus(PatientQueue queue) {
 		System.out.println(queue);
@@ -71,7 +71,7 @@ public class QueueManagementDao {
 		System.out.println("Patient Queue Status Updated: " + queue);
 		return queue;
 	}
-	
+
 	public List<PatientQueue> getPatientQueueByVisitroom(String visitroom, String dateCreated) throws ParseException {
 		Date d = new SimpleDateFormat("yyyy-MM-dd").parse(dateCreated);
 		System.out.println("Date :: " + d);
@@ -82,7 +82,7 @@ public class QueueManagementDao {
 		criteria.setMaxResults(6);
 		return criteria.list();
 	}
-	
+
 	public PatientQueue getTokenByIdentifier(String identifier, Date dateCreated) throws APIException {
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("identifier", identifier));
@@ -90,7 +90,7 @@ public class QueueManagementDao {
 		criteria.add(Restrictions.eq("status", true));
 		return (PatientQueue) criteria.uniqueResult();
 	}
-	
+
 	public List<PatientQueue> getAllQueueId() {
 		List<PatientQueue> queueList = getSession().createQuery("from PatientQueue").list();
 		for (PatientQueue queue : queueList) {
@@ -98,30 +98,30 @@ public class QueueManagementDao {
 		}
 		return queueList;
 	}
-	
+
 	public List<PatientQueue> countIdentifier(String roomId, Date d) {
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("roomId", roomId));
 		criteria.add(Restrictions.eq("dateCreated", d));
 		return criteria.list();
 	}
-	
+
 	public List<Object> getAllVisitroom() {
-		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from queue_v7");
+		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from opd_patient_queue");
 		return criteria.list();
 	}
-	
+
 	@Transactional
 	public PatientQueue update(PatientQueue queue) {
 		getSession().saveOrUpdate(queue);
 		System.out.println("Updated Queue :: " + queue);
 		return queue;
 	}
-	
+
 	public void truncate() throws DAOException {
-		getSession().createSQLQuery("truncate table queue_v7").executeUpdate();
+		getSession().createSQLQuery("truncate table opd_patient_queue").executeUpdate();
 	}
-	
+
 	@Transactional
 	public PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String roomId, Date dateCreated) {
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
