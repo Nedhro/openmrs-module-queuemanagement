@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.queuemanagement.api.impl;
 
+import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class QueueManagementServiceImpl extends BaseOpenmrsService implements QueueManagementService {
 	
@@ -60,6 +62,11 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	@Override
 	public List<Object> getAllVisitroom() {
 		return dao.getAllVisitroom();
+	}
+	
+	@Override
+	public Map<String, Object> getPoorPatientData() {
+		return dao.getPoorPatientData();
 	}
 	
 	@Transactional

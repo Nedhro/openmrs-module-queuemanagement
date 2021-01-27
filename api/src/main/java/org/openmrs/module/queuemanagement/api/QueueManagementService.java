@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The main service of this module, which is exposed for other modules. See
@@ -48,6 +49,9 @@ public interface QueueManagementService extends OpenmrsService {
 	
 	@Transactional
 	List<Object> getAllVisitroom() throws APIException;
+	
+	@Transactional
+	Map<String, Object> getPoorPatientData() throws APIException;
 	
 	@Transactional
 	void update(PatientQueue queue) throws APIException;
