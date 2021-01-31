@@ -27,14 +27,14 @@
 
     <!-- Wraps QueueManagementService methods in DB transactions and OpenMRS interceptors,
     which set audit info like dateCreated, changedBy, etc.-->
-    <bean id="queuemanagement.QueueManagementService"
+    <bean id="queueManagementService"
             class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager">
             <ref bean="transactionManager" />
         </property>
         <property name="target">
             <bean class="org.openmrs.module.queuemanagement.api.impl.QueueManagementServiceImpl">
-                <property name="dao" ref="queuemanagement.QueueManagementDao" />
+                <property name="queueManagementDao" ref="queueManagementDao" />
             </bean>
         </property>
         <property name="preInterceptors">
@@ -45,13 +45,19 @@
         </property>
     </bean>
 
+    <bean id="queueManagementDao" class="org.openmrs.module.queuemanagement.api.dao.QueueManagementDao">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+
     <!-- Adds QueueManagementService to OpenMRS context so it can be accessed
     calling Context.getService(QueueManagementService.class) -->
     <bean parent="serviceContext">
         <property name="moduleService">
             <list>
                 <value>org.openmrs.module.queuemanagement.api.QueueManagementService</value>
-                <ref bean="queuemanagement.QueueManagementService" />
+                <ref bean="queueManagementService" />
             </list>
         </property>
     </bean>
