@@ -33,7 +33,7 @@
             <ref bean="transactionManager" />
         </property>
         <property name="target">
-            <bean class="org.openmrs.module.queuemanagement.api.impl.QueueManagementServiceImpl">
+            <bean class="org.openmrs.module.queuemanagement.api.service.impl.QueueManagementServiceImpl">
                 <property name="queueManagementDao" ref="queueManagementDao" />
             </bean>
         </property>
@@ -45,7 +45,7 @@
         </property>
     </bean>
 
-    <bean id="queueManagementDao" class="org.openmrs.module.queuemanagement.api.dao.QueueManagementDao">
+    <bean id="queueManagementDao" class="org.openmrs.module.queuemanagement.api.dao.impl.QueueManagementDaoImpl">
         <property name="sessionFactory">
             <ref bean="sessionFactory"/>
         </property>
@@ -56,7 +56,7 @@
     <bean parent="serviceContext">
         <property name="moduleService">
             <list>
-                <value>org.openmrs.module.queuemanagement.api.QueueManagementService</value>
+                <value>org.openmrs.module.queuemanagement.api.service.QueueManagementService</value>
                 <ref bean="queueManagementService" />
             </list>
         </property>

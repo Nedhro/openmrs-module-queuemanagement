@@ -1,16 +1,13 @@
-package org.openmrs.module.queuemanagement.api.dao;
+package org.openmrs.module.queuemanagement.api.dao.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.api.APIException;
 import org.openmrs.api.db.DAOException;
-import org.openmrs.api.db.hibernate.DbSession;
-import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.queuemanagement.PatientQueue;
+import org.openmrs.module.queuemanagement.api.dao.QueueMangementDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,21 +19,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@Repository("queueManagementDao")
-public class QueueManagementDao {
+public class QueueManagementDaoImpl implements QueueMangementDao {
 	
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
+	@Autowired
 	private SessionFactory sessionFactory;
 	
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 	
+	Session getSession() {
+		return this.sessionFactory.getCurrentSession();
+	}
+	
 	public PatientQueue getPatientByIdentifier(String identifier, Date dateCreated) {
-		return (PatientQueue) sessionFactory.getCurrentSession().createCriteria(PatientQueue.class)
-		        .add(Restrictions.eq("identifier", identifier)).add(Restrictions.eq("dateCreated", dateCreated))
-		        .add(Restrictions.eq("status", true)).uniqueResult();
+		return (PatientQueue) getSession().createCriteria(PatientQueue.class).add(Restrictions.eq("identifier", identifier))
+		        .add(Restrictions.eq("dateCreated", dateCreated)).add(Restrictions.eq("status", true)).uniqueResult();
 	}
 	
 	@Transactional
@@ -55,12 +55,12 @@ public class QueueManagementDao {
 			this.updateStatus(checkIdentifier);
 			
 			queue.setToken(token);
-			sessionFactory.getCurrentSession().persist(queue);
+			getSession().persist(queue);
 			System.out.println("Patient Queue Added: " + queue);
 		}
 		if (queue.getId() == null) {
 			queue.setToken(token);
-			sessionFactory.getCurrentSession().persist(queue);
+			getSession().persist(queue);
 			System.out.println("Patient Queue Added: " + queue);
 		}
 		return queue;
@@ -70,7 +70,7 @@ public class QueueManagementDao {
 	public PatientQueue updateStatus(PatientQueue queue) {
 		System.out.println(queue);
 		queue.setStatus(false);
-		sessionFactory.getCurrentSession().saveOrUpdate(queue);
+		getSession().saveOrUpdate(queue);
 		System.out.println("Patient Queue Status Updated: " + queue);
 		return queue;
 	}
@@ -78,7 +78,7 @@ public class QueueManagementDao {
 	public List<PatientQueue> getPatientQueueByVisitroom(String visitroom, String dateCreated) throws ParseException {
 		Date d = new SimpleDateFormat("yyyy-MM-dd").parse(dateCreated);
 		System.out.println("Date :: " + d);
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(PatientQueue.class);
+		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("visitroom", visitroom));
 		criteria.add(Restrictions.eq("dateCreated", d));
 		criteria.add(Restrictions.eq("status", true));
@@ -86,8 +86,8 @@ public class QueueManagementDao {
 		return criteria.list();
 	}
 	
-	public PatientQueue getTokenByIdentifier(String identifier, Date dateCreated) throws APIException {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(PatientQueue.class);
+	public PatientQueue getTokenByIdentifier(String identifier, Date dateCreated) {
+		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("identifier", identifier));
 		criteria.add(Restrictions.eq("dateCreated", dateCreated));
 		criteria.add(Restrictions.eq("status", true));
@@ -95,40 +95,38 @@ public class QueueManagementDao {
 	}
 	
 	public List<PatientQueue> getAllQueueId() {
-		List<PatientQueue> queueList = sessionFactory.getCurrentSession().createQuery("from PatientQueue").list();
-		for (PatientQueue queue : queueList) {
-			log.info("Queue List::" + queue);
-		}
+		List<PatientQueue> queueList = getSession().createQuery("from PatientQueue").list();
+		System.out.println("Queue List ::" + queueList);
+		log.info("Queue List ::" + queueList);
 		return queueList;
 	}
 	
 	public List<PatientQueue> countIdentifier(String roomId, Date d) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(PatientQueue.class);
+		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("roomId", roomId));
 		criteria.add(Restrictions.eq("dateCreated", d));
 		return criteria.list();
 	}
 	
 	public List<Object> getAllVisitroom() {
-		SQLQuery criteria = sessionFactory.getCurrentSession().createSQLQuery(
-		    "select distinct visitroom from opd_patient_queue");
+		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from opd_patient_queue");
 		return criteria.list();
 	}
 	
 	@Transactional
 	public PatientQueue update(PatientQueue queue) {
-		sessionFactory.getCurrentSession().saveOrUpdate(queue);
+		getSession().saveOrUpdate(queue);
 		System.out.println("Updated Queue :: " + queue);
 		return queue;
 	}
 	
 	public void truncate() throws DAOException {
-		sessionFactory.getCurrentSession().createSQLQuery("truncate table opd_patient_queue").executeUpdate();
+		getSession().createSQLQuery("truncate table opd_patient_queue").executeUpdate();
 	}
 	
 	@Transactional
 	public PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String roomId, Date dateCreated) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(PatientQueue.class);
+		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("identifier", identifier));
 		criteria.add(Restrictions.eq("roomId", roomId));
 		criteria.add(Restrictions.eq("dateCreated", dateCreated));

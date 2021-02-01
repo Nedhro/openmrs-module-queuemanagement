@@ -1,6 +1,6 @@
 package org.openmrs.module.queuemanagement.web.scheduler;
 
-import org.openmrs.module.queuemanagement.api.QueueManagementService;
+import org.openmrs.module.queuemanagement.api.service.QueueManagementService;
 import org.openmrs.scheduler.tasks.AbstractTask;
 import org.springframework.beans.factory.annotation.Autowired;
 

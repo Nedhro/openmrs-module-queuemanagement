@@ -1,22 +1,22 @@
-package org.openmrs.module.queuemanagement.api.impl;
+package org.openmrs.module.queuemanagement.api.service.impl;
 
 import org.openmrs.api.db.DAOException;
-import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.queuemanagement.PatientQueue;
-import org.openmrs.module.queuemanagement.api.QueueManagementService;
-import org.openmrs.module.queuemanagement.api.dao.QueueManagementDao;
+import org.openmrs.module.queuemanagement.api.dao.QueueMangementDao;
+import org.openmrs.module.queuemanagement.api.service.QueueManagementService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-@Transactional
-public class QueueManagementServiceImpl extends BaseOpenmrsService implements QueueManagementService {
+public class QueueManagementServiceImpl implements QueueManagementService {
 	
-	QueueManagementDao queueManagementDao;
+	@Autowired
+	private QueueMangementDao queueManagementDao;
 	
-	public void setQueueManagementDao(QueueManagementDao queueManagementDao) {
+	public void setQueueManagementDao(QueueMangementDao queueManagementDao) {
 		this.queueManagementDao = queueManagementDao;
 	}
 	
