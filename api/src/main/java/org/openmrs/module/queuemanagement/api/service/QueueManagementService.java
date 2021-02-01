@@ -1,4 +1,4 @@
-package org.openmrs.module.queuemanagement.api;
+package org.openmrs.module.queuemanagement.api.service;
 
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
@@ -31,23 +31,24 @@ public interface QueueManagementService {
 	@Transactional
 	PatientQueue save(PatientQueue queue) throws Exception;
 	
-	@Transactional
+	@Transactional(readOnly = true)
 	List<PatientQueue> getPatientQueueByVisitroom(String visitroom, String dateCreated) throws ParseException;
 	
-	@Transactional
-	List<PatientQueue> getAllQueueId() throws APIException;
+	@Transactional(readOnly = true)
+	List<PatientQueue> getAllQueueId();
+	
+	@Transactional(readOnly = true)
+	List<Object> getAllVisitroom();
 	
 	@Transactional
-	List<Object> getAllVisitroom() throws APIException;
+	void update(PatientQueue queue) throws Exception;
 	
 	@Transactional
-	void update(PatientQueue queue) throws APIException;
-	
 	void truncate() throws DAOException;
 	
-	@Transactional
+	@Transactional(readOnly = true)
 	PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String roomId, Date dateCreated);
 	
-	@Transactional
+	@Transactional(readOnly = true)
 	PatientQueue getTokenByIdentifier(String identifier, Date date);
 }

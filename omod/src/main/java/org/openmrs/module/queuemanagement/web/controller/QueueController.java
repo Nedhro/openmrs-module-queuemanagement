@@ -1,16 +1,13 @@
 package org.openmrs.module.queuemanagement.web.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.queuemanagement.PatientQueue;
-import org.openmrs.module.queuemanagement.api.QueueManagementService;
+import org.openmrs.module.queuemanagement.api.service.QueueManagementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.MessageCodesResolver;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,7 +23,7 @@ public class QueueController {
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
-	private QueueManagementService queueManagementService;
+	QueueManagementService queueManagementService;
 	
 	@RequestMapping("/module/queuemanagement/dashboard")
 	public String showDashboard() {
@@ -80,7 +77,7 @@ public class QueueController {
 	@RequestMapping(value = "/module/queuemanagement/updateQueue", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Object> updateQueue(@RequestParam(value = "identifier") String identifier,
-	        @RequestParam(value = "roomId") String roomId) throws ParseException {
+	        @RequestParam(value = "roomId") String roomId) throws Exception {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = dateFormat.parse(dateFormat.format(new Date()));
@@ -108,7 +105,7 @@ public class QueueController {
 	@RequestMapping(value = "/module/queuemanagement/reconsult", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Object> reconsult(@RequestParam(value = "identifier") String identifier,
-	        @RequestParam(value = "roomId") String roomId) throws ParseException {
+	        @RequestParam(value = "roomId") String roomId) throws Exception {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = dateFormat.parse(dateFormat.format(new Date()));
