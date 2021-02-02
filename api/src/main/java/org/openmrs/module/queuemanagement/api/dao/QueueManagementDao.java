@@ -1,13 +1,13 @@
 package org.openmrs.module.queuemanagement.api.dao;
 
-import org.openmrs.module.queuemanagement.PatientQueue;
+import org.openmrs.module.queuemanagement.api.entity.PatientQueue;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-public interface QueueMangementDao {
+public interface QueueManagementDao {
 	
 	@Transactional
 	PatientQueue save(PatientQueue queue) throws Exception;

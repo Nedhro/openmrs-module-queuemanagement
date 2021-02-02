@@ -1,29 +1,29 @@
 package org.openmrs.module.queuemanagement.api.service.impl;
 
 import org.openmrs.api.db.DAOException;
-import org.openmrs.module.queuemanagement.PatientQueue;
-import org.openmrs.module.queuemanagement.api.dao.QueueMangementDao;
+import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.queuemanagement.api.dao.QueueManagementDao;
+import org.openmrs.module.queuemanagement.api.entity.PatientQueue;
 import org.openmrs.module.queuemanagement.api.service.QueueManagementService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-public class QueueManagementServiceImpl implements QueueManagementService {
+public class QueueManagementServiceImpl extends BaseOpenmrsService implements QueueManagementService {
 	
-	@Autowired
-	private QueueMangementDao queueManagementDao;
+	private QueueManagementDao queueManagementDao;
 	
-	public void setQueueManagementDao(QueueMangementDao queueManagementDao) {
+	public void setQueueManagementDao(QueueManagementDao queueManagementDao) {
 		this.queueManagementDao = queueManagementDao;
 	}
 	
 	@Transactional
 	@Override
 	public PatientQueue save(PatientQueue queue) throws Exception {
-		return queueManagementDao.save(queue);
+		this.queueManagementDao.save(queue);
+		return queue;
 	}
 	
 	@Override
@@ -62,5 +62,4 @@ public class QueueManagementServiceImpl implements QueueManagementService {
 	public PatientQueue getTokenByIdentifier(String identifier, Date date) {
 		return queueManagementDao.getTokenByIdentifier(identifier, date);
 	}
-	
 }

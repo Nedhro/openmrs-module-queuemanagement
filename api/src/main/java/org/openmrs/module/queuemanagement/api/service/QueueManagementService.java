@@ -1,20 +1,15 @@
 package org.openmrs.module.queuemanagement.api.service;
 
-import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.api.db.DAOException;
-import org.openmrs.module.queuemanagement.PatientQueue;
+import org.openmrs.module.queuemanagement.api.entity.PatientQueue;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-/**
- * The main service of this module, which is exposed for other modules. See
- * moduleApplicationContext.xml on how it is wired up.
- */
-public interface QueueManagementService {
+public interface QueueManagementService extends OpenmrsService {
 	
 	/*
 	/*

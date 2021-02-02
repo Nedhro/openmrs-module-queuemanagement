@@ -6,8 +6,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.db.DAOException;
-import org.openmrs.module.queuemanagement.PatientQueue;
-import org.openmrs.module.queuemanagement.api.dao.QueueMangementDao;
+import org.openmrs.module.queuemanagement.api.entity.PatientQueue;
+import org.openmrs.module.queuemanagement.api.dao.QueueManagementDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +19,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class QueueManagementDaoImpl implements QueueMangementDao {
+@Repository("queueManagementDao")
+public class QueueManagementDaoImpl implements QueueManagementDao {
 	
-	protected final Logger log = LoggerFactory.getLogger(getClass());
+	protected final Logger log = LoggerFactory.getLogger(QueueManagementDaoImpl.class);
 	
-	@Autowired
 	private SessionFactory sessionFactory;
 	
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 	
-	Session getSession() {
+	private Session getSession() {
 		return this.sessionFactory.getCurrentSession();
 	}
 	

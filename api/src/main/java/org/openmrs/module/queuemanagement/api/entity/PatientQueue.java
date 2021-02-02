@@ -1,4 +1,4 @@
-package org.openmrs.module.queuemanagement;
+package org.openmrs.module.queuemanagement.api.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
