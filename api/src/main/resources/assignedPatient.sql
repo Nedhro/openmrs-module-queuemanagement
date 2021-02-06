@@ -17,7 +17,7 @@ insert into global_property(property, property_value, uuid)
             join person per on pr.person_id=per.person_id and per.voided=0
             inner join obs as obs on pn.person_id = obs.person_id
             inner join location l on obs.value_complex = l.location_id
-            left join opd_patient_queue q on q.identifier = pi.identifier  and q.status=1
+            left join opd_patients_queue q on q.identifier = pi.identifier  and q.status="ACTIVE"
             left outer join visit_attribute va on va.visit_id = v.visit_id and va.attribute_type_id = (
             select visit_attribute_type_id from visit_attribute_type where name="Admission Status"
             )

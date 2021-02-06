@@ -5,12 +5,15 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Location;
+import org.openmrs.api.LocationService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
-import org.openmrs.module.queuemanagement.PatientQueue;
-import org.openmrs.module.queuemanagement.api.dao.QueueMangementDao;
+import org.openmrs.module.queuemanagement.api.dao.QueueManagementDao;
+import org.openmrs.module.queuemanagement.api.entity.PatientQueue;
+import org.openmrs.module.queuemanagement.api.entity.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,24 +22,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class QueueManagementDaoImpl implements QueueMangementDao {
+@Repository("queueManagementDao")
+public class QueueManagementDaoImpl implements QueueManagementDao {
 	
-	protected final Logger log = LoggerFactory.getLogger(getClass());
+	protected final Logger log = LoggerFactory.getLogger(QueueManagementDaoImpl.class);
 	
-	@Autowired
 	private SessionFactory sessionFactory;
 	
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 	
-	Session getSession() {
+	private Session getSession() {
 		return this.sessionFactory.getCurrentSession();
 	}
 	
 	public PatientQueue getPatientByIdentifier(String identifier, Date dateCreated) {
 		return (PatientQueue) getSession().createCriteria(PatientQueue.class).add(Restrictions.eq("identifier", identifier))
-		        .add(Restrictions.eq("dateCreated", dateCreated)).add(Restrictions.eq("status", true)).uniqueResult();
+		        .add(Restrictions.eq("dateCreated", dateCreated)).add(Restrictions.eq("status", Status.ACTIVE.getValue()))
+		        .uniqueResult();
 	}
 	
 	@Transactional
@@ -68,8 +72,8 @@ public class QueueManagementDaoImpl implements QueueMangementDao {
 	
 	@Transactional
 	public PatientQueue updateStatus(PatientQueue queue) {
-		System.out.println(queue);
-		queue.setStatus(false);
+		System.out.println("Queue to Update:: " + queue);
+		queue.setStatus(Status.SCHEDULED.getValue());
 		getSession().saveOrUpdate(queue);
 		System.out.println("Patient Queue Status Updated: " + queue);
 		return queue;
@@ -81,7 +85,7 @@ public class QueueManagementDaoImpl implements QueueMangementDao {
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("visitroom", visitroom));
 		criteria.add(Restrictions.eq("dateCreated", d));
-		criteria.add(Restrictions.eq("status", true));
+		criteria.add(Restrictions.eq("status", Status.ACTIVE.getValue()));
 		criteria.setMaxResults(6);
 		return criteria.list();
 	}
@@ -90,8 +94,17 @@ public class QueueManagementDaoImpl implements QueueMangementDao {
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("identifier", identifier));
 		criteria.add(Restrictions.eq("dateCreated", dateCreated));
-		criteria.add(Restrictions.eq("status", true));
+		criteria.add(Restrictions.eq("status", Status.ACTIVE.getValue()));
 		return (PatientQueue) criteria.uniqueResult();
+	}
+	
+	@Override
+	public String getHospitalData() {
+		LocationService locationService = Context.getService(LocationService.class);
+		List<Location> location = locationService.getLocationsByTag(locationService.getLocationTagByName("Visit Location"));
+		Location visitLocation = location.get(location.size() - 1);
+		String hospitalname = visitLocation.getName();
+		return hospitalname;
 	}
 	
 	public List<PatientQueue> getAllQueueId() {
@@ -109,7 +122,7 @@ public class QueueManagementDaoImpl implements QueueMangementDao {
 	}
 	
 	public List<Object> getAllVisitroom() {
-		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from opd_patient_queue");
+		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from opd_patients_queue");
 		return criteria.list();
 	}
 	
@@ -121,10 +134,9 @@ public class QueueManagementDaoImpl implements QueueMangementDao {
 	}
 	
 	public void truncate() throws DAOException {
-		getSession().createSQLQuery("truncate table opd_patient_queue").executeUpdate();
+		getSession().createSQLQuery("truncate table opd_patients_queue").executeUpdate();
 	}
 	
-	@Transactional
 	public PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String roomId, Date dateCreated) {
 		Criteria criteria = getSession().createCriteria(PatientQueue.class);
 		criteria.add(Restrictions.eq("identifier", identifier));

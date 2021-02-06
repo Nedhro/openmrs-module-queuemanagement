@@ -1,6 +1,7 @@
 package org.openmrs.module.queuemanagement.web.controller;
 
-import org.openmrs.module.queuemanagement.PatientQueue;
+import org.openmrs.module.queuemanagement.api.entity.PatientQueue;
+import org.openmrs.module.queuemanagement.api.entity.Status;
 import org.openmrs.module.queuemanagement.api.service.QueueManagementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +21,10 @@ import java.util.List;
 @Controller
 public class QueueController {
 	
-	protected final Logger log = LoggerFactory.getLogger(getClass());
+	protected final Logger log = LoggerFactory.getLogger(QueueController.class);
 	
 	@Autowired
-	QueueManagementService queueManagementService;
+	private QueueManagementService queueManagementService;
 	
 	@RequestMapping("/module/queuemanagement/dashboard")
 	public String showDashboard() {
@@ -38,7 +39,7 @@ public class QueueController {
 	@RequestMapping(value = "/module/queuemanagement/allqueues", method = RequestMethod.GET)
 	@ResponseBody
 	public List<PatientQueue> showAllQueues() {
-		List<PatientQueue> queues = queueManagementService.getAllQueueId();
+		List<PatientQueue> queues = this.queueManagementService.getAllQueueId();
 		System.out.println("All Queues :: " + queues);
 		if (queues.isEmpty()) {
 			log.info("No Queue has been created yet...");
@@ -61,6 +62,7 @@ public class QueueController {
 			    queue.getIdentifier(), queue.getRoomId(), date);
 			System.out.println("Patient Queue Exists ::" + patientQueue);
 			if (patientQueue == null) {
+				queue.setStatus(Status.ACTIVE.getValue());
 				this.queueManagementService.save(queue);
 				log.info("Queue ::" + queue);
 				System.out.println("Queue :: " + queue);
@@ -85,8 +87,8 @@ public class QueueController {
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier, roomId,
 			    date);
 			if (patientQueue != null) {
-				if (patientQueue.getStatus() == true) {
-					patientQueue.setStatus(false);
+				if (patientQueue.getStatus() != Status.CONSULTED.getValue()) {
+					patientQueue.setStatus(Status.CONSULTED.getValue());
 					this.queueManagementService.update(patientQueue);
 					return new ResponseEntity<Object>(patientQueue, HttpStatus.ACCEPTED);
 				}
@@ -113,8 +115,8 @@ public class QueueController {
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier, roomId,
 			    date);
 			if (patientQueue != null) {
-				if (patientQueue.getStatus() == false) {
-					patientQueue.setStatus(true);
+				if (patientQueue.getStatus() != Status.ACTIVE.getValue()) {
+					patientQueue.setStatus(Status.ACTIVE.getValue());
 					this.queueManagementService.update(patientQueue);
 					return new ResponseEntity<Object>(patientQueue, HttpStatus.ACCEPTED);
 				}
@@ -136,7 +138,7 @@ public class QueueController {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String date = dateFormat.format(new Date());
 		System.out.println("Date New :: " + date);
-		List<PatientQueue> obs = queueManagementService.getPatientQueueByVisitroom(visitroom, date);
+		List<PatientQueue> obs = this.queueManagementService.getPatientQueueByVisitroom(visitroom, date);
 		if (obs == null) {
 			log.info("No Queue data found...");
 		} else {
@@ -149,8 +151,15 @@ public class QueueController {
 	@RequestMapping(value = "/module/queuemanagement/visitrooms", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Object> getVisitrooms() {
-		List<Object> rooms = queueManagementService.getAllVisitroom();
+		List<Object> rooms = this.queueManagementService.getAllVisitroom();
 		return rooms;
+	}
+	
+	@RequestMapping(value = "/module/queuemanagement/hospitalData", method = RequestMethod.GET)
+	@ResponseBody
+	public String getHospitalData() {
+		String hospitalData = this.queueManagementService.getHospitalData();
+		return hospitalData;
 	}
 	
 	@RequestMapping(value = "/module/queuemanagement/getToken", method = RequestMethod.GET)
@@ -160,13 +169,13 @@ public class QueueController {
 		PatientQueue patient = null;
 		try {
 			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateCreated);
-			patient = queueManagementService.getTokenByIdentifier(identifier, date);
+			patient = this.queueManagementService.getTokenByIdentifier(identifier, date);
 			return patient;
 		}
 		catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return patient;
+		return null;
 	}
 	
 }

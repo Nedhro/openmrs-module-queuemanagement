@@ -1,4 +1,5 @@
 <meta http-equiv="Refresh" content="30"/>
+<title>Queue Management System</title>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Galada&display=swap">
@@ -6,17 +7,12 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
 
 <style>
 		@import url('https://fonts.googleapis.com/css2?family=Galada&display=swap');
-		@import url('fonts/Siyamrupali.ttf');
-		@import url('fonts/Nikosh.ttf');
 
 		div {
-				font-family: 'Nikosh', Fallback, sans-serif !important;
+				font-family: 'Roboto', Fallback, sans-serif !important;
 		}
 
 		.headText {
@@ -34,7 +30,7 @@
 		}
 
 		.banglaFont {
-				font-family: 'Nikosh', Fallback, sans-serif !important;
+				font-family: 'Roboto Thin', Fallback, sans-serif !important;
 		}
 </style>
 <script type="text/javascript">
@@ -62,17 +58,30 @@
             }
         });
     };
+
+    function getHospitalData() {
+        const url = "/openmrs/module/queuemanagement/hospitalData.form";
+        $.get(url, function (hospitalData, status) {
+            console.log("Hospital Data: " + hospitalData + "\nStatus: " + status);
+            const hospitalName = hospitalData;
+            document.getElementById('hospitalName').innerHTML = hospitalName;
+        });
+    };
     $(document).ready(function () {
         getVisitRooms();
+        getHospitalData();
     });
 </script>
 <div class="container-fluid">
-		<div class="row headText">
+		<div class="row">
 				<div class="col-md-12">
 						<img src="/bahmni_config/openmrs/images/hospitalBanner.png" width="100%;">
+						<%--<h2 class="text-center font-weight-bold headText" id="hospitalName">Hospital Name</h2>--%>
+						<h3 class="text-center font-weight-bold text-info">
+								<span><spring:message code="patientDashboard"/></span>
+						</h3>
 				</div>
 		</div>
-		<h2 class="text-center font-weight-bold text-info"><span><spring:message code="patientDashboard"/></span></h2>
 		<div class="container row" style="width: 100%">
 				<div class="col-md-12 m-1">
 						<table id="patientQueue" class="table table-striped table-bordered" style="width:100%">
