@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="org.openmrs.module.queuemanagement.api.entity">
-    <class name="PatientQueue" table="opd_patient_queue" lazy="false">
+    <class name="PatientQueue" table="opd_patients_queue" lazy="false">
         <id name="id" column="queueid">
             <generator class="native"/>
         </id>
@@ -11,6 +11,6 @@
         <property name="visitroom" type="java.lang.String" column="visitroom" length="255"/>
         <property name="roomId" type="java.lang.String" column="room_id" length="255"/>
         <property name="dateCreated" type="java.util.Date" column="date_created" length="255"/>
-        <property name="status" type="java.lang.Boolean" column="status" length="10"/>
+        <property name="status" type="java.lang.String" column="status" length="255"/>
     </class>
 </hibernate-mapping>

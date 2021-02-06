@@ -46,4 +46,7 @@ public interface QueueManagementService extends OpenmrsService {
 	
 	@Transactional(readOnly = true)
 	PatientQueue getTokenByIdentifier(String identifier, Date date);
+	
+	@Transactional(readOnly = true)
+	String getHospitalData();
 }

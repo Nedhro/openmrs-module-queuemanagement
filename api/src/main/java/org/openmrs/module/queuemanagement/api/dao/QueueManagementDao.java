@@ -27,4 +27,6 @@ public interface QueueManagementDao {
 	PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String roomId, Date dateCreated);
 	
 	PatientQueue getTokenByIdentifier(String identifier, Date date);
+	
+	String getHospitalData();
 }

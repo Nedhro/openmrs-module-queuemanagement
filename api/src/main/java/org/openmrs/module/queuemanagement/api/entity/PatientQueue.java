@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity(name = "queuemanagement.PatientQueue")
-@Table(name = "opd_patient_queue")
+@Entity(name = "PatientQueue")
+@Table(name = "opd_patients_queue")
 public class PatientQueue implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -41,12 +41,13 @@ public class PatientQueue implements Serializable {
 	
 	@Basic(optional = false, fetch = FetchType.EAGER)
 	@Column(name = "status", updatable = true)
-	private Boolean status;
+	@Enumerated(EnumType.STRING)
+	private String status;
 	
 	public PatientQueue() {
 	}
 	
-	public PatientQueue(String identifier, String visitroom, String roomId, Date dateCreated, Boolean status) {
+	public PatientQueue(String identifier, String visitroom, String roomId, Date dateCreated, String status) {
 		this.identifier = identifier;
 		this.visitroom = visitroom;
 		this.roomId = roomId;
@@ -102,11 +103,11 @@ public class PatientQueue implements Serializable {
 		this.dateCreated = dateCreated;
 	}
 	
-	public Boolean getStatus() {
+	public String getStatus() {
 		return status;
 	}
 	
-	public void setStatus(Boolean status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 	

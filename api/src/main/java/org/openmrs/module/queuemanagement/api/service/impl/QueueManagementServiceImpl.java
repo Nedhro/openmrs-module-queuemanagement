@@ -52,7 +52,6 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 		queueManagementDao.truncate();
 	}
 	
-	@Transactional
 	@Override
 	public PatientQueue getPatientByIdentifierAndVisitroom(String identifier, String roomId, Date dateCreated) {
 		return queueManagementDao.getPatientByIdentifierAndVisitroom(identifier, roomId, dateCreated);
@@ -61,5 +60,10 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	@Override
 	public PatientQueue getTokenByIdentifier(String identifier, Date date) {
 		return queueManagementDao.getTokenByIdentifier(identifier, date);
+	}
+	
+	@Override
+	public String getHospitalData() {
+		return queueManagementDao.getHospitalData();
 	}
 }

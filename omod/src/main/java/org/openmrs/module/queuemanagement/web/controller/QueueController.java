@@ -1,6 +1,7 @@
 package org.openmrs.module.queuemanagement.web.controller;
 
 import org.openmrs.module.queuemanagement.api.entity.PatientQueue;
+import org.openmrs.module.queuemanagement.api.entity.Status;
 import org.openmrs.module.queuemanagement.api.service.QueueManagementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,7 @@ public class QueueController {
 			    queue.getIdentifier(), queue.getRoomId(), date);
 			System.out.println("Patient Queue Exists ::" + patientQueue);
 			if (patientQueue == null) {
+				queue.setStatus(Status.ACTIVE.getValue());
 				this.queueManagementService.save(queue);
 				log.info("Queue ::" + queue);
 				System.out.println("Queue :: " + queue);
@@ -85,8 +87,8 @@ public class QueueController {
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier, roomId,
 			    date);
 			if (patientQueue != null) {
-				if (patientQueue.getStatus() == true) {
-					patientQueue.setStatus(false);
+				if (patientQueue.getStatus() != Status.CONSULTED.getValue()) {
+					patientQueue.setStatus(Status.CONSULTED.getValue());
 					this.queueManagementService.update(patientQueue);
 					return new ResponseEntity<Object>(patientQueue, HttpStatus.ACCEPTED);
 				}
@@ -113,8 +115,8 @@ public class QueueController {
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier, roomId,
 			    date);
 			if (patientQueue != null) {
-				if (patientQueue.getStatus() == false) {
-					patientQueue.setStatus(true);
+				if (patientQueue.getStatus() != Status.ACTIVE.getValue()) {
+					patientQueue.setStatus(Status.ACTIVE.getValue());
 					this.queueManagementService.update(patientQueue);
 					return new ResponseEntity<Object>(patientQueue, HttpStatus.ACCEPTED);
 				}
@@ -153,6 +155,13 @@ public class QueueController {
 		return rooms;
 	}
 	
+	@RequestMapping(value = "/module/queuemanagement/hospitalData", method = RequestMethod.GET)
+	@ResponseBody
+	public String getHospitalData() {
+		String hospitalData = this.queueManagementService.getHospitalData();
+		return hospitalData;
+	}
+	
 	@RequestMapping(value = "/module/queuemanagement/getToken", method = RequestMethod.GET)
 	@ResponseBody
 	public PatientQueue getPatientToken(@RequestParam("identifier") String identifier,
@@ -166,7 +175,7 @@ public class QueueController {
 		catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return patient;
+		return null;
 	}
 	
 }
