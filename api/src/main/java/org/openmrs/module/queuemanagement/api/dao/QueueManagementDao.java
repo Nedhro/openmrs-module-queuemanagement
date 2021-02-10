@@ -16,7 +16,7 @@ public interface QueueManagementDao {
 	
 	List<PatientQueue> getAllQueueId();
 	
-	List<Object> getAllVisitroom();
+	List<Object> getAllVisitroom() throws ParseException;
 	
 	@Transactional
 	PatientQueue update(PatientQueue queue);

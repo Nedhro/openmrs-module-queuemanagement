@@ -37,7 +37,7 @@ public class QueueManagementServiceImpl extends BaseOpenmrsService implements Qu
 	}
 	
 	@Override
-	public List<Object> getAllVisitroom() {
+	public List<Object> getAllVisitroom() throws ParseException {
 		return queueManagementDao.getAllVisitroom();
 	}
 	

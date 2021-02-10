@@ -33,7 +33,7 @@ public interface QueueManagementService extends OpenmrsService {
 	List<PatientQueue> getAllQueueId();
 	
 	@Transactional(readOnly = true)
-	List<Object> getAllVisitroom();
+	List<Object> getAllVisitroom() throws ParseException;
 	
 	@Transactional
 	void update(PatientQueue queue) throws Exception;
