@@ -23,7 +23,7 @@ insert into global_property(property, property_value, uuid)
             select visit_attribute_type_id from visit_attribute_type where name="Admission Status"
             )
             where
-            v.date_stopped is null and cast(obs.obs_datetime as date) = cast(now() as date)
+            v.date_stopped is null and cast(q.date_created as date) = cast(now() as date)
             and obs.concept_id = (select concept_id from concept_name where name="Opd Consultation Room" and
             concept_name_type="FULLY_SPECIFIED" limit 1)
             and obs.voided = 0

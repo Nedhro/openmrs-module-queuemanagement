@@ -150,7 +150,7 @@ public class QueueController {
 	
 	@RequestMapping(value = "/module/queuemanagement/visitrooms", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Object> getVisitrooms() {
+	public List<Object> getVisitrooms() throws ParseException {
 		List<Object> rooms = this.queueManagementService.getAllVisitroom();
 		return rooms;
 	}

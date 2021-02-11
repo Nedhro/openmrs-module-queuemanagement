@@ -17,12 +17,12 @@ insert into global_property(property, property_value, uuid)
             join person per on pr.person_id=per.person_id and per.voided=0
             inner join obs as obs on pn.person_id = obs.person_id
             inner join location l on obs.value_complex = l.location_id
-            left join opd_patients_queue q on q.identifier = pi.identifier  and q.status="ACTIVE"
+            inner join opd_patients_queue q on q.identifier = pi.identifier  and q.status="ACTIVE"
             left outer join visit_attribute va on va.visit_id = v.visit_id and va.attribute_type_id = (
             select visit_attribute_type_id from visit_attribute_type where name="Admission Status"
             )
             where
-            v.date_stopped is null and cast(obs.obs_datetime as date) = cast(now() as date)
+            v.date_stopped is null and cast(q.date_created as date) = cast(now() as date)
             and obs.concept_id = (select concept_id from concept_name where name="Opd Consultation Room" and
             concept_name_type="FULLY_SPECIFIED" limit 1)
             and obs.voided = 0

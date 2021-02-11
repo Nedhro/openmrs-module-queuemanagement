@@ -121,9 +121,17 @@ public class QueueManagementDaoImpl implements QueueManagementDao {
 		return criteria.list();
 	}
 	
-	public List<Object> getAllVisitroom() {
-		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from opd_patients_queue");
-		return criteria.list();
+	public List<Object> getAllVisitroom() throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date dateCreated = dateFormat.parse(dateFormat.format(new Date()));
+		System.out.println("Date :: " + dateCreated);
+		List<Object> roomList = getSession()
+		        .createQuery("SELECT distinct pq.visitroom FROM PatientQueue pq WHERE pq.dateCreated=:dateCreated")
+		        .setParameter("dateCreated", dateCreated).list();
+		
+		System.out.println("Rooms :: " + roomList);
+		//		SQLQuery criteria = getSession().createSQLQuery("select distinct visitroom from opd_patients_queue");
+		return roomList;
 	}
 	
 	@Transactional
