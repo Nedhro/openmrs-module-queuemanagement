@@ -1,5 +1,6 @@
-insert into global_property(property, property_value, uuid)
-            VALUES ('emrapi.sqlSearch.myreferredpatient', 'select distinct concat(pn.given_name," ", ifnull(pn.family_name,'''')) as name,
+update global_property
+set property_value = 'select distinct concat(pn.given_name," ",
+            ifnull(pn.family_name,'''')) as name,
             pi.identifier as identifier,
             concat("",p.uuid) as uuid,
             concat("",v.uuid) as activeVisitUuid,
@@ -17,7 +18,7 @@ insert into global_property(property, property_value, uuid)
             join person per on pr.person_id=per.person_id and per.voided=0
             inner join obs as obs on pn.person_id = obs.person_id
             inner join location l on obs.value_complex = l.location_id
-            inner join opd_patients_queue q on q.identifier = pi.identifier and q.status="ACTIVE"
+            inner join opd_patients_queue q on q.identifier = pi.identifier and q.status="CONSULTED"
             left outer join visit_attribute va on va.visit_id = v.visit_id and va.attribute_type_id = (
             select visit_attribute_type_id from visit_attribute_type where name="Admission Status"
             )
@@ -27,4 +28,5 @@ insert into global_property(property, property_value, uuid)
             concept_name_type="FULLY_SPECIFIED" limit 1)
             and obs.voided = 0
             and l.uuid=${location_uuid}
-            order by en.encounter_datetime asc;', uuid());
+            order by en.encounter_datetime desc;'
+where property = 'emrapi.sqlSearch.consultationdone';
