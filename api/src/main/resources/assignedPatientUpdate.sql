@@ -1,5 +1,5 @@
-insert into global_property(property, property_value, uuid)
-            VALUES ('emrapi.sqlSearch.myreferredpatient', 'select distinct concat(pn.given_name," ", ifnull(pn.family_name,'''')) as name,
+update global_property
+set property_value = 'select distinct concat(pn.given_name," ", ifnull(pn.family_name,'''')) as name,
             pi.identifier as identifier,
             concat("",p.uuid) as uuid,
             concat("",v.uuid) as activeVisitUuid,
@@ -27,4 +27,5 @@ insert into global_property(property, property_value, uuid)
             concept_name_type="FULLY_SPECIFIED" limit 1)
             and obs.voided = 0
             and l.uuid=${location_uuid}
-            order by en.encounter_datetime asc;', uuid());
+            order by en.encounter_datetime asc;'
+where property = 'emrapi.sqlSearch.myreferredpatient';

@@ -27,24 +27,43 @@
         </sql>
     </changeSet>
 
-    <!-- <changeSet id="global-property-queuemng-assigned-sql-v1" author="Nidhro, Atuar">
-         <preConditions onFail="MARK_RAN">
-             <sqlCheck expectedResult="0">select count(*) from global_property where
-                 property='emrapi.sqlSearch.myreferredpatient'
-             </sqlCheck>
-         </preConditions>
-         <comment>Adding query to fetch upcoming Queue for patient</comment>
-         <sqlFile path="assignedPatient.sql"/>
-     </changeSet>
+    <changeSet id="global-property-queuemng-assigned-sql-v1" author="Nidhro, Atuar">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from global_property where
+                property='emrapi.sqlSearch.myreferredpatient'
+            </sqlCheck>
+        </preConditions>
+        <comment>Adding query to fetch assigned Queue of patients for doctors</comment>
+        <sqlFile path="assignedPatient.sql"/>
+    </changeSet>
 
-     <changeSet id="global-property-queuemng-consulted-sql-v1" author="Nidhro, Atuar">
-         <preConditions onFail="MARK_RAN">
-             <sqlCheck expectedResult="0">select count(*) from global_property where
-                 property='emrapi.sqlSearch.consultationdone'
-             </sqlCheck>
-         </preConditions>
-         <comment>Adding query to fetch Consultation done patients</comment>
-         <sqlFile path="consultationDonePatients.sql"/>
-     </changeSet>-->
+    <changeSet id="global-property-queuemng-assigned-sql-update-v1" author="Nidhro, Atuar">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">select count(*) from global_property where
+                property='emrapi.sqlSearch.myreferredpatient'
+            </sqlCheck>
+        </preConditions>
+        <comment>Updating query to fetch assigned Queue of patients for doctors</comment>
+        <sqlFile path="assignedPatientUpdate.sql"/>
+    </changeSet>
 
+    <changeSet id="global-property-queuemng-consulted-sql-v1" author="Nidhro, Atuar">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from global_property where
+                property='emrapi.sqlSearch.consultationdone'
+            </sqlCheck>
+        </preConditions>
+        <comment>Adding query to fetch Consultation done patients</comment>
+        <sqlFile path="consultationDonePatients.sql"/>
+    </changeSet>
+
+    <changeSet id="global-property-queuemng-consulted-sql-update-v1" author="Nidhro, Atuar">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">select count(*) from global_property where
+                property='emrapi.sqlSearch.consultationdone'
+            </sqlCheck>
+        </preConditions>
+        <comment>Updating query to fetch Consultation done patients</comment>
+        <sqlFile path="consultationDonePatientsUpdate.sql"/>
+    </changeSet>
 </databaseChangeLog>
