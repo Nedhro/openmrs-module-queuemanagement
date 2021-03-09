@@ -18,9 +18,9 @@
 	<url>https://wiki.openmrs.org/x/FQ4z</url>
 
 	<scm>
-		<connection>scm:git:git@github.com:openmrs/openmrs-module-queuemanagement.git</connection>
-		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-queuemanagement.git</developerConnection>
-		<url>https://github.com/openmrs/openmrs-module-queuemanagement/</url>
+		<connection>scm:git:git@github.com:Nedhro/openmrs-module-queuemanagement.git</connection>
+		<developerConnection>scm:git:git@github.com:Nedhro/openmrs-module-queuemanagement.git</developerConnection>
+		<url>https://github.com/Nedhro/openmrs-module-queuemanagement/</url>
 	</scm>
 
 	<modules>
