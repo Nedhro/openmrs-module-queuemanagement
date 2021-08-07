@@ -20,52 +20,51 @@ import java.util.List;
 
 @Controller
 public class QueueController {
-	
+
 	protected final Logger log = LoggerFactory.getLogger(QueueController.class);
-	
+
 	@Autowired
 	private QueueManagementService queueManagementService;
-	
+
 	@RequestMapping("/module/queuemanagement/dashboard")
 	public String showDashboard() {
 		return "/module/queuemanagement/dashboard";
 	}
-	
+
 	@RequestMapping("/module/queuemanagement/roomWiseQueue")
 	public String showQueueRoomWise() {
 		return "/module/queuemanagement/roomQueue";
 	}
-	
+
 	@RequestMapping(value = "/module/queuemanagement/allqueues", method = RequestMethod.GET)
 	@ResponseBody
 	public List<PatientQueue> showAllQueues() {
 		List<PatientQueue> queues = this.queueManagementService.getAllQueueId();
-		System.out.println("All Queues :: " + queues);
+		log.info("All Queues :: " + queues);
 		if (queues.isEmpty()) {
 			log.info("No Queue has been created yet...");
 		} else {
 			return queues;
 		}
-		
+
 		return queues;
 	}
-	
+
 	@RequestMapping(value = "/module/queuemanagement/generate", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Object> saveQueue(@Valid @RequestBody PatientQueue queue) throws IOException {
-		System.out.println("Submitted Queue :: " + queue.getDateCreated() + " :: " + queue.getVisitroom());
+		log.info("Submitted Queue :: " + queue.getDateCreated() + " :: " + queue.getVisitroom());
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = dateFormat.parse(dateFormat.format(queue.getDateCreated()));
-			System.out.println("Date New :: " + date);
+			log.info("Date New :: " + date);
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(
 			    queue.getIdentifier(), queue.getRoomId(), date);
-			System.out.println("Patient Queue Exists ::" + patientQueue);
+			log.info("Patient Queue Exists ::" + patientQueue);
 			if (patientQueue == null) {
 				queue.setStatus(Status.ACTIVE.getValue());
 				this.queueManagementService.save(queue);
 				log.info("Queue ::" + queue);
-				System.out.println("Queue :: " + queue);
 				return new ResponseEntity<Object>(queue, HttpStatus.CREATED);
 			}
 			return new ResponseEntity<Object>(queue, HttpStatus.IM_USED);
@@ -75,15 +74,15 @@ public class QueueController {
 			return new ResponseEntity<Object>(e.getCause(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	@RequestMapping(value = "/module/queuemanagement/updateQueue", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/module/queuemanagement/updateQueue", method = RequestMethod.PUT)
 	@ResponseBody
 	public ResponseEntity<Object> updateQueue(@RequestParam(value = "identifier") String identifier,
 	        @RequestParam(value = "roomId") String roomId) throws Exception {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = dateFormat.parse(dateFormat.format(new Date()));
-			System.out.println("Date New :: " + date);
+			log.info("Date New :: " + date);
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier, roomId,
 			    date);
 			if (patientQueue != null) {
@@ -92,18 +91,19 @@ public class QueueController {
 					this.queueManagementService.update(patientQueue);
 					return new ResponseEntity<Object>(patientQueue, HttpStatus.ACCEPTED);
 				}
-				
+
 				this.queueManagementService.update(patientQueue);
 				return new ResponseEntity<Object>(patientQueue, HttpStatus.ALREADY_REPORTED);
 			}
 			throw new RuntimeException("Queue does not exist");
+
 		}
 		catch (RuntimeException e) {
 			log.error("Runtime error while trying to update Queue", e);
 			return new ResponseEntity<Object>(e.getCause(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@RequestMapping(value = "/module/queuemanagement/reconsult", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Object> reconsult(@RequestParam(value = "identifier") String identifier,
@@ -111,7 +111,7 @@ public class QueueController {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = dateFormat.parse(dateFormat.format(new Date()));
-			System.out.println("Date New :: " + date);
+			log.info("Date New :: " + date);
 			PatientQueue patientQueue = this.queueManagementService.getPatientByIdentifierAndVisitroom(identifier, roomId,
 			    date);
 			if (patientQueue != null) {
@@ -120,53 +120,52 @@ public class QueueController {
 					this.queueManagementService.update(patientQueue);
 					return new ResponseEntity<Object>(patientQueue, HttpStatus.ACCEPTED);
 				}
-				
+
 				this.queueManagementService.update(patientQueue);
 				return new ResponseEntity<Object>(patientQueue, HttpStatus.ALREADY_REPORTED);
 			}
 			throw new RuntimeException("Queue does not exist");
+
 		}
 		catch (RuntimeException e) {
 			log.error("Runtime error while trying to update Queue", e);
 			return new ResponseEntity<Object>(e.getCause(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@RequestMapping(value = "/module/queuemanagement/queueByVisitroom", method = RequestMethod.GET)
 	@ResponseBody
 	public List<PatientQueue> getQueueByVisitroom(@RequestParam(value = "visitroom") String visitroom) throws ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String date = dateFormat.format(new Date());
-		System.out.println("Date New :: " + date);
+		log.info("Date New :: " + date);
 		List<PatientQueue> obs = this.queueManagementService.getPatientQueueByVisitroom(visitroom, date);
 		if (obs == null) {
 			log.info("No Queue data found...");
 		} else {
-			System.out.println("Queues last six :: " + obs);
+			log.info("Queues last six :: " + obs);
 			return obs;
 		}
 		return obs;
 	}
-	
+
 	@RequestMapping(value = "/module/queuemanagement/visitrooms", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Object> getVisitrooms() throws ParseException {
-		List<Object> rooms = this.queueManagementService.getAllVisitroom();
-		return rooms;
+		return this.queueManagementService.getAllVisitroom();
 	}
-	
+
 	@RequestMapping(value = "/module/queuemanagement/hospitalData", method = RequestMethod.GET)
 	@ResponseBody
 	public String getHospitalData() {
-		String hospitalData = this.queueManagementService.getHospitalData();
-		return hospitalData;
+		return this.queueManagementService.getHospitalData();
 	}
-	
+
 	@RequestMapping(value = "/module/queuemanagement/getToken", method = RequestMethod.GET)
 	@ResponseBody
 	public PatientQueue getPatientToken(@RequestParam("identifier") String identifier,
 	        @RequestParam(value = "dateCreated") String dateCreated) {
-		PatientQueue patient = null;
+		PatientQueue patient;
 		try {
 			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateCreated);
 			patient = this.queueManagementService.getTokenByIdentifier(identifier, date);
@@ -177,5 +176,5 @@ public class QueueController {
 		}
 		return null;
 	}
-	
+
 }
